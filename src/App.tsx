@@ -1,8 +1,12 @@
+import { BrowserRouter } from 'react-router'
+import { Router } from './Router'
 import './styles/global.css'
 
 function App() {
   return (
-    <div>Show</div>
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
   )
 }
 
