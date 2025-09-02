@@ -3,6 +3,8 @@
     --color-accent: #44C2FD;
     --color-white: #F7F9FC;
     --color-black: #1A202C;
+    --font-main: "Montserrat Alternates", sans-serif;
+    --font-accent: "Lato", sans-serif;
 }
 
 * {
@@ -20,5 +22,5 @@ body {
 }
 
 body, input, textarea, select, button {
-    font-family: "Montserrat Alternates", sans-serif;
+    font-family: var(--font-accent);
 }
