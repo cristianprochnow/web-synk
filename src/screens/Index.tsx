@@ -1,8 +1,20 @@
-import { Bell, Blocks, Inbox, LayoutTemplate, Workflow } from "lucide-react"
-import { Link, Outlet } from "react-router"
+import { Bell, Blocks, Inbox, LayoutTemplate, Workflow } from 'lucide-react'
+import { useCallback } from 'react'
+import { Outlet, useLocation } from 'react-router'
+import { MenuItem } from '../components/MenuItem'
 import '../styles/screens/index.css'
 
 export function Index() {
+    const location = useLocation();
+    const getPaths = useCallback(() => {
+        return location.pathname.split('/').map(path => path.trim())
+    }, [location]);
+    const checkActiveRoute = useCallback((route: string) => {
+        const paths = getPaths()
+
+        return paths.includes(route)
+    }, [getPaths])
+
     return (
         <div id="screen-index">
             <header className="wrapper">
@@ -25,42 +37,22 @@ export function Index() {
 
             <footer>
                 <nav>
-                    <Link to="/templates" className="menu-item active">
-                        <div className="icon-container">
-                            <span className="icon">
-                                <LayoutTemplate />
-                            </span>
-                            <span className="description">Templates</span>
-                        </div>
-                        <span className="label">Templates</span>
-                    </Link>
-                    <Link to="/templates" className="menu-item">
-                        <div className="icon-container">
-                            <span className="icon">
-                                <Workflow />
-                            </span>
-                            <span className="description">Integrações</span>
-                        </div>
-                        <span className="label">Integrações</span>
-                    </Link>
-                    <Link to="/templates" className="menu-item">
-                        <div className="icon-container">
-                            <span className="icon">
-                                <Blocks />
-                            </span>
-                            <span className="description">Perfis</span>
-                        </div>
-                        <span className="label">Perfis</span>
-                    </Link>
-                    <Link to="/templates" className="menu-item">
-                        <div className="icon-container">
-                            <span className="icon">
-                                <Inbox />
-                            </span>
-                            <span className="description">Publicações</span>
-                        </div>
-                        <span className="label">Publicações</span>
-                    </Link>
+                    <MenuItem label="Templates" 
+                        Icon={LayoutTemplate}
+                        isActive={checkActiveRoute('templates')}
+                        to="/templates" />
+                    <MenuItem label="Integrações" 
+                        Icon={Workflow}
+                        isActive={checkActiveRoute('integrations')}
+                        to="/integrations" />
+                    <MenuItem label="Perfis" 
+                        Icon={Blocks}
+                        isActive={checkActiveRoute('integration-profile')}
+                        to="/integration-profile" />
+                    <MenuItem label="Publicações" 
+                        Icon={Inbox}
+                        isActive={checkActiveRoute('posts')}
+                        to="/posts" />
                 </nav>
             </footer>
         </div>

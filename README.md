@@ -15,3 +15,7 @@ docker compose up
 yarn
 yarn dev
 ```
+
+## Tests
+
+To do tests, just run `yarn test` in local environment that everything gonna be ok!
