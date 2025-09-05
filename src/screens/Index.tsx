@@ -40,8 +40,7 @@ export function Index() {
                     <MenuItem label="Templates" 
                         Icon={LayoutTemplate}
                         isActive={checkActiveRoute('templates')}
-                        to="/templates"
-                        onClick={() => {}} />
+                        to="/templates" />
                     <MenuItem label="Integrações" 
                         Icon={Workflow}
                         isActive={checkActiveRoute('integrations')}
