@@ -7,12 +7,12 @@ export type ActionButtonProps = {
     Icon: LucideIcon
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
-export function ActionButton(props: ActionButtonProps) {
+export function ActionButton({ label, Icon, ...rest }: ActionButtonProps) {
     return (
-        <button type="button" className="action-button" {...props}>
-            <props.Icon />
+        <button type="button" className="action-button" {...rest}>
+            <Icon />
 
-            <span>{props.label}</span>
+            <span>{label}</span>
         </button>
     )
 }
