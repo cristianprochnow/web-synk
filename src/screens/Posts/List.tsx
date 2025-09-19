@@ -52,8 +52,8 @@ export function List() {
             </header>
 
             <div className='post-list-container'>
-                {posts.map(post => (
-                    <div className='post-item'>
+                {posts.map((post, index) => (
+                    <div className='post-item' key={index}>
                         <span className='post-item-name'>{post.post_name}</span>
                         <span className='post-item-status'>{post.status}</span>
 
