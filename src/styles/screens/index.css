@@ -110,7 +110,6 @@
         }
     }
 
-    /* 688 - 992 - 1312 */
     @media (max-width: 688px) {
         & > header {
             padding: 0 1.6rem;
@@ -127,6 +126,10 @@
                     margin-right: auto;
                 }
             }
+        }
+
+        & > footer {
+            bottom: -1rem;
         }
     }
 }
