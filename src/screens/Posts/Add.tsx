@@ -28,8 +28,8 @@ export function Add() {
                 <div className="col-2">
                     <div className="field-group">
                         <label htmlFor="template_id">Template</label>
-                        <select name="template_id" id="template_id">
-                            <option value="" selected disabled>Selecione</option>
+                        <select name="template_id" id="template_id" defaultValue="">
+                            <option value="" disabled>Selecione</option>
                             <option value="1">Template 1</option>
                             <option value="2">Template 2</option>
                         </select>
@@ -37,8 +37,8 @@ export function Add() {
 
                     <div className="field-group">
                         <label htmlFor="int_profile_id">Perfil</label>
-                        <select name="int_profile_id" id="int_profile_id">
-                            <option value="" selected disabled>Selecione</option>
+                        <select name="int_profile_id" id="int_profile_id" defaultValue="">
+                            <option value="" disabled>Selecione</option>
                             <option value="1">Perfil 1</option>
                             <option value="2">Perfil 2</option>
                         </select>
