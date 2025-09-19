@@ -109,4 +109,24 @@
             gap: .8rem;
         }
     }
+
+    /* 688 - 992 - 1312 */
+    @media (max-width: 688px) {
+        & > header {
+            padding: 0 1.6rem;
+
+            & > img {
+                display: none;
+            }
+
+            aside {
+                flex: 1;
+                justify-content: flex-end;
+
+                .greetings {
+                    margin-right: auto;
+                }
+            }
+        }
+    }
 }
