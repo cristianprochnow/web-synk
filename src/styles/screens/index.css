@@ -10,7 +10,7 @@
         margin: auto;
     }
 
-    header {
+    & > header {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -84,11 +84,11 @@
         }
     }
 
-    footer {
+    & > footer {
         width: fit-content;
         height: 6.4rem;
         border-radius: 1.6rem;
-        position: absolute;
+        position: fixed;
         bottom: 1rem;
         left: 50%;
         transform: translate(-50%, -50%);
