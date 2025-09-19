@@ -55,4 +55,18 @@
         padding-right: .4rem;
         display: none;
     }
+
+    @media (max-width: 688px) {
+        &.active {
+            .label {
+                display: none;
+            }
+        }
+
+        .icon-container {
+            .description {
+                display: none;
+            }
+        }
+    }
 }

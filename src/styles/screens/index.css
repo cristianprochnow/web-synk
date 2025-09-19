@@ -1,7 +1,7 @@
 #screen-index {
     width: 100vw;
     min-height: 100vh;
-    padding: 1.6rem 0;
+    padding: 1.6rem 0 12rem 0;
     position: relative;
 
     .wrapper {
@@ -107,6 +107,33 @@
             background: var(--color-white);
             border-radius: 1.4rem;
             gap: .8rem;
+        }
+    }
+
+    @media (max-width: 688px) {
+        & {
+            padding: 1.6rem 0 10rem 0;
+        }
+
+        & > header {
+            padding: 0 1.6rem;
+
+            & > img {
+                display: none;
+            }
+
+            aside {
+                flex: 1;
+                justify-content: flex-end;
+
+                .greetings {
+                    margin-right: auto;
+                }
+            }
+        }
+
+        & > footer {
+            bottom: -1rem;
         }
     }
 }

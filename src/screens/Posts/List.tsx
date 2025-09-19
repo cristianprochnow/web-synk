@@ -1,5 +1,8 @@
 import { Blocks, LayoutTemplate, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
+import { ActionButton } from '../../components/ActionButton'
+import { PageTitle } from '../../components/PageTitle'
 import '../../styles/screens/posts/list.css'
 
 type PostItem = {
@@ -13,6 +16,7 @@ type PostItem = {
 
 export function List() {
     const [posts, setPosts] = useState<PostItem[]>([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         setPosts([
@@ -35,16 +39,16 @@ export function List() {
         ])
     }, [])
 
+    function goToAdd() {
+        navigate('/posts/add')
+    }
+
     return (
         <div id="screen-post-list">
             <header>
-                <h1>Publicações</h1>
+                <PageTitle>Publicações</PageTitle>
 
-                <button type="button">
-                    <Plus />
-
-                    <span>Nova publicação</span>
-                </button>
+                <ActionButton label="Nova publicação" Icon={Plus} onClick={goToAdd} />
             </header>
 
             <div className='post-list-container'>
