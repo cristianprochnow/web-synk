@@ -24,6 +24,6 @@ body {
     min-height: 100vh;
 }
 
-body, input, textarea, select, button {
+body, input, textarea, select, button, a {
     font-family: var(--font-accent);
 }
