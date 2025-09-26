@@ -7,13 +7,13 @@ export type OutlineButtonProps = {
     Icon: LucideIcon
 } & ButtonHTMLAttributes<HTMLButtonElement>
 
-export function OutlineButton(props: OutlineButtonProps) {
+export function OutlineButton({ Icon, label, ...rest }: OutlineButtonProps) {
     return (
-        <button type="button" className="outline-button" {...props}>
+        <button type="button" className="outline-button" {...rest}>
             <div>
-                <props.Icon />
+                <Icon />
 
-                <span>{props.label}</span>
+                <span>{label}</span>
             </div>
         </button>
     )

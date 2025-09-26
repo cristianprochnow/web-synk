@@ -6,8 +6,11 @@
     --color-gray: #718096;
     --font-main: "Montserrat Alternates", sans-serif;
     --font-accent: "Lato", sans-serif;
-    --width-max-screen: 1280px;
     /* 688 - 992 - 1312 */
+    --width-max-screen: 1280px;
+    --r1: 154%;
+    --r2: 68.5%;
+    --toastify-font-family: var(--font-main);
 }
 
 * {
@@ -28,4 +31,33 @@ body {
 
 body, input, textarea, select, button, a {
     font-family: var(--font-accent);
+}
+
+.loader {
+    width: 60px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    aspect-ratio: 1;
+    border-radius: 50%; 
+    background:
+        radial-gradient(var(--r1) var(--r2) at top   ,#0000 79.5%,#269af2 80%),
+        radial-gradient(var(--r1) var(--r2) at bottom,#269af2 79.5%,#0000 80%),
+        radial-gradient(var(--r1) var(--r2) at top   ,#0000 79.5%,#269af2 80%),
+        #ccc;
+    background-size: 50.5% 220%;
+    background-position: -100% 0%,0% 0%,100% 0%;
+    background-repeat:no-repeat;
+    animation: l9 2s infinite linear;
+
+    &.hidden {
+        display: none;
+    }
+}
+
+@keyframes l9 {
+    33%  {background-position:    0% 33% ,100% 33% ,200% 33% }
+    66%  {background-position: -100%  66%,0%   66% ,100% 66% }
+    100% {background-position:    0% 100%,100% 100%,200% 100%}
 }
