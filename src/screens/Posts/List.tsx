@@ -1,7 +1,8 @@
 import { Blocks, LayoutTemplate, Plus } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
+import emptyAvatar from '../../assets/empty.svg'
 import { ActionButton } from '../../components/ActionButton'
 import { PageTitle } from '../../components/PageTitle'
 import '../../styles/screens/posts/list.css'
@@ -40,15 +41,17 @@ export function List() {
         const response = await fetch(url + '/post')
         const data = await response.json() as FetchPostListResponse
 
+        const hasData = data.posts && data.posts.length > 1
+
         if (!data.resource.ok) {
             toast.error(data.resource.error)
         }
 
-        if (data.posts.length === 0) {
+        if (!hasData) {
             toast.info('Nenhum post encontrado :(')
         }
 
-        setPosts(data.posts)
+        setPosts(hasData ? data.posts : [])
         setLoading(false)
     }
 
@@ -65,6 +68,15 @@ export function List() {
             </header>
 
             <div className={`loader ${!isLoading ? 'hidden' : ''}`}></div>
+            <div className={`empty ${!isLoading && posts.length > 0 ? 'hidden' : ''}`}>
+                <div className="empty-avatar">
+                    <img src={emptyAvatar} alt="Nenhum resultado encontrado!" />
+                </div>
+
+                <p>
+                    Ooops... Nenhum resultado encontrado. Que tal  começar <Link to="/posts/add">criando um novo?</Link> 
+                </p>
+            </div>
 
             <div className='post-list-container'>
                 {posts.map((post, index) => (
