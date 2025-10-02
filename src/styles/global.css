@@ -44,6 +44,10 @@ body, input, textarea, select, button, a {
     align-items: center;
     gap: 1.6rem;
 
+    &.hidden {
+        display: none;
+    }
+
     .empty-avatar {
         width: 80%;
         height: 100%;
