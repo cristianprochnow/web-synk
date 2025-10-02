@@ -28,6 +28,7 @@ export function List() {
     const [posts, setPosts] = useState<PostItem[]>([])
     const [isLoading, setLoading] = useState(false)
     const navigate = useNavigate()
+  const [isEmpty, setIsEmpty] = useState(false);
 
     useEffect(() => {
         loadCards()
@@ -54,6 +55,7 @@ export function List() {
         setPosts(hasData ? data.posts : [])
         setLoading(false)
     }
+    setIsEmpty(!hasData);
 
     function goToAdd() {
         navigate('/posts/add')
@@ -72,6 +74,7 @@ export function List() {
                 <div className="empty-avatar">
                     <img src={emptyAvatar} alt="Nenhum resultado encontrado!" />
                 </div>
+      <div className={`empty ${isLoading || !isEmpty ? 'hidden' : ''}`}>
 
                 <p>
                     Ooops... Nenhum resultado encontrado. Que tal  começar <Link to="/posts/add">criando um novo?</Link> 
