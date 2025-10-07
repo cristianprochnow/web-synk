@@ -4,61 +4,24 @@ import { ActionButton } from '../../components/ActionButton';
 import { OutlineButton } from '../../components/OutlineButton';
 import { PageTitle } from '../../components/PageTitle';
 import '../../styles/screens/posts/add.css';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-
-type TemplateOption = {
-  template_id: number
-  template_name: string
-};
-
-type FetchTemplateListResponse = {
-  resource: {
-    ok: boolean
-    error: string
-  }
-  templates: TemplateOption[]
-};
-
-type CreatePostResponse = {
-  resource: {
-    ok: boolean
-    error: string
-  }
-  post: CreatePostResponseInfo
-};
-
-type CreatePostResponseInfo = {
-  post_id: number
-};
-
-type IntProfileOption = {
-  int_profile_id: number
-  int_profile_name: string
-  color_hex: string
-};
-
-type FetchIntProfileListResponse = {
-  resource: {
-    ok: boolean
-    error: string
-  }
-  int_profiles: IntProfileOption[]
-};
-
-type NewPostData = {
-  post_name: string | null,
-  post_content: string | null,
-  template_id: number | null,
-  int_profile_id: number | null
-};
+import {
+  fetchBasicTemplates, hasBasicTemplates,
+  type TemplateOption
+} from '../../api/templates.ts';
+import {
+  fetchBasicIntProfiles,
+  hasBasicIntProfiles, type IntProfileOption
+} from '../../api/intProfiles.ts';
+import { addPost, type NewPostData } from '../../api/post.ts';
 
 export function Add() {
   const navigate = useNavigate();
+
   const [templateOptions, setTemplateOptions] = useState<TemplateOption[]>([]);
   const [intProfileOptions, setIntProfileOptions] = useState<IntProfileOption[]>([]);
   const [isLoading, setLoading] = useState(false);
-  const url = useMemo(() => import.meta.env.VITE_GATEWAY_ENDPOINT, []);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const templateRef = useRef<HTMLSelectElement>(null);
@@ -83,10 +46,8 @@ export function Add() {
   }
 
   async function loadTemplates() {
-    const response = await fetch(url + '/templates/basic');
-    const data = await response.json() as FetchTemplateListResponse;
-
-    const hasData = data.templates && data.templates.length > 1;
+    const data = await fetchBasicTemplates();
+    const hasData = hasBasicTemplates(data);
 
     if (!data.resource.ok) {
       toast.error('Erro durante a busca de templates: ' +data.resource.error);
@@ -100,10 +61,8 @@ export function Add() {
   }
 
   async function loadIntProfiles() {
-    const response = await fetch(url + '/int_profiles/basic');
-    const data = await response.json() as FetchIntProfileListResponse;
-
-    const hasData = data.int_profiles && data.int_profiles.length > 1;
+    const data = await fetchBasicIntProfiles();
+    const hasData = hasBasicIntProfiles(data);
 
     if (!data.resource.ok) {
       toast.error('Erro durante a busca de perfis: ' + data.resource.error);
@@ -116,7 +75,7 @@ export function Add() {
     setIntProfileOptions(hasData ? data.int_profiles : []);
   }
 
-  function handleOnSave() {
+  async function handleOnSave() {
     const postData: NewPostData = {
       post_name: nameRef.current?.value || null,
       post_content: contentRef.current?.value || null,
@@ -124,18 +83,7 @@ export function Add() {
       int_profile_id: templateRef.current ? Number(templateRef.current.value) : null,
     };
 
-    createPost(postData);
-  }
-
-  async function createPost(post: NewPostData) {
-    const response = await fetch(url + '/post', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(post)
-    });
-    const data = await response.json() as CreatePostResponse;
+    const data = await addPost(postData);
 
     if (!data.resource.ok) {
       toast.error('Erro durante a criação da publicação: ' + data.resource.error);
