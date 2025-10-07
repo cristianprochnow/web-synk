@@ -3,6 +3,7 @@ import { Dashboard } from './screens/Dashboard'
 import { Index } from './screens/Index'
 import { NotFound } from './screens/NotFound'
 import { Add as PostAdd } from './screens/Posts/Add'
+import { Edit as PostEdit } from './screens/Posts/Edit'
 import { List as PostList } from './screens/Posts/List'
 import { Templates } from './screens/Templates'
 
@@ -17,6 +18,7 @@ export function Router() {
                 <Route path="posts">
                     <Route index element={<PostList />} />
                     <Route path="add" element={<PostAdd />} />
+                    <Route path="edit/:post_id" element={<PostEdit />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
             </Route>
