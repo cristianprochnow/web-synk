@@ -6,23 +6,7 @@ import emptyAvatar from '../../assets/empty.svg';
 import { ActionButton } from '../../components/ActionButton';
 import { PageTitle } from '../../components/PageTitle';
 import '../../styles/screens/posts/list.css';
-
-type PostItem = {
-  post_id: number,
-  post_name: string,
-  template_name: string,
-  int_profile_name: string,
-  created_at: string,
-  status: string
-}
-
-type FetchPostListResponse = {
-  resource: {
-    ok: boolean
-    error: string
-  }
-  posts: PostItem[]
-}
+import { hasPosts, listPosts, type PostItem } from '../../api/post.ts';
 
 export function List() {
   const [posts, setPosts] = useState<PostItem[]>([]);
@@ -35,14 +19,10 @@ export function List() {
   }, []);
 
   async function loadCards() {
-    const url = import.meta.env.VITE_GATEWAY_ENDPOINT;
-
     setLoading(true);
 
-    const response = await fetch(url + '/post');
-    const data = await response.json() as FetchPostListResponse;
-
-    const hasData = data.posts && data.posts.length > 1;
+    const data = await listPosts();
+    const hasData = hasPosts(data);
 
     if (!data.resource.ok) {
       toast.error(data.resource.error);
@@ -84,7 +64,7 @@ export function List() {
       <div className="post-list-container">
         {posts.map((post, index) => (
           <div className="post-item" key={index}>
-            <span className="post-item-name">{post.post_name}</span>
+            <Link to={`/posts/edit/${post.post_id}`} className="post-item-name">{post.post_name}</Link>
             <span className="post-item-status">{post.status}</span>
 
             <div className="post-item-info">
