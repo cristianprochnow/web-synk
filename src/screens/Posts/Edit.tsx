@@ -1,9 +1,9 @@
-import { ArrowLeft, Save } from 'lucide-react';
-import { redirect, useNavigate } from 'react-router';
+import { ArrowLeft, Save, Trash } from 'lucide-react';
+import { redirect, useNavigate, useParams } from 'react-router';
 import { ActionButton } from '../../components/ActionButton';
 import { OutlineButton } from '../../components/OutlineButton';
 import { PageTitle } from '../../components/PageTitle';
-import '../../styles/screens/posts/add.css';
+import '../../styles/screens/posts/edit.css';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
@@ -14,10 +14,17 @@ import {
   fetchBasicIntProfiles,
   hasBasicIntProfiles, type IntProfileOption
 } from '../../api/intProfiles.ts';
-import { addPost, type NewPostData } from '../../api/post.ts';
+import {
+  editPost,
+  type EditPostData,
+  hasPosts,
+  listPosts
+} from '../../api/post.ts';
 
-export function Add() {
+export function Edit() {
   const navigate = useNavigate();
+
+  const { post_id } = useParams();
 
   const [templateOptions, setTemplateOptions] = useState<TemplateOption[]>([]);
   const [intProfileOptions, setIntProfileOptions] = useState<IntProfileOption[]>([]);
@@ -29,11 +36,51 @@ export function Add() {
   const contentRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    loadDropdowns()
+    loadData()
   }, []);
 
   function goBack() {
     navigate(-1);
+  }
+
+  async function loadData() {
+    await loadPostInfo();
+    await loadDropdowns();
+  }
+
+  async function loadPostInfo() {
+    if (!post_id) {
+      toast.error('ID da publicação não encontrado.');
+
+      return;
+    }
+
+    const data = await listPosts({
+      postId: Number(post_id),
+      includeContent: true
+    });
+    const hasData = hasPosts(data);
+
+    if (!hasData) {
+      toast.error(`Publicação com id ${post_id} não encontrada.`);
+
+      return;
+    }
+
+    const postInfo = data.posts[0];
+
+    if (nameRef.current) {
+      nameRef.current.value = postInfo.post_name;
+    }
+    if (contentRef.current) {
+      contentRef.current.value = postInfo.post_content;
+    }
+    if (templateRef.current) {
+      templateRef.current.value = postInfo.template_id.toString();
+    }
+    if (intProfileRef.current) {
+      intProfileRef.current.value = postInfo.int_profile_id.toString();
+    }
   }
 
   async function loadDropdowns() {
@@ -76,30 +123,35 @@ export function Add() {
   }
 
   async function handleOnSave() {
-    const postData: NewPostData = {
+    const postData: EditPostData = {
+      post_id: Number(post_id),
       post_name: nameRef.current?.value || null,
       post_content: contentRef.current?.value || null,
       template_id: templateRef.current ? Number(templateRef.current.value) : null,
-      int_profile_id: templateRef.current ? Number(templateRef.current.value) : null,
+      int_profile_id: intProfileRef.current ? Number(intProfileRef.current.value) : null,
     };
 
-    const data = await addPost(postData);
+    const data = await editPost(postData);
 
     if (!data.resource.ok) {
-      toast.error('Erro durante a criação da publicação: ' + data.resource.error);
+      toast.error('Erro durante a atualização da publicação: ' + data.resource.error);
 
       return;
     }
 
-    toast.success('Publicação criada com sucesso!');
+    toast.success('Publicação atualizada com sucesso!');
     setTimeout(() => redirect('/posts'), 1000);
   }
 
+  function handleOnDelete() {
+
+  }
+
   return (
-    <div id="screen-post-add">
+    <div id="screen-post-edit">
       <header>
         <OutlineButton label="Voltar" Icon={ArrowLeft} onClick={goBack}/>
-        <PageTitle>Nova publicação</PageTitle>
+        <PageTitle>Editar publicação</PageTitle>
       </header>
 
       <form className="form-add-container">
@@ -142,7 +194,8 @@ export function Add() {
       </form>
 
       <footer>
-        <ActionButton label="Salvar" Icon={Save} onClick={handleOnSave}/>
+        <OutlineButton label="Excluir" Icon={Trash} onClick={handleOnDelete} />
+        <ActionButton label="Salvar" Icon={Save} onClick={handleOnSave} />
       </footer>
     </div>
   );
