@@ -1,5 +1,5 @@
 import { ArrowLeft, Save } from 'lucide-react';
-import { redirect, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { ActionButton } from '../../components/ActionButton';
 import { OutlineButton } from '../../components/OutlineButton';
 import { PageTitle } from '../../components/PageTitle';
@@ -92,7 +92,7 @@ export function Add() {
     }
 
     toast.success('Publicação criada com sucesso!');
-    setTimeout(() => redirect('/posts'), 1000);
+    navigate('/posts');
   }
 
   return (
