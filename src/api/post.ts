@@ -105,3 +105,15 @@ export async function listPosts(params: FetchPostFilters | null = null): Promise
 export function hasPosts(data: FetchPostListResponse): boolean {
   return data.posts && data.posts.length > 0;
 }
+
+export async function deletePost(postId: number): Promise<EditPostResponse> {
+  const response = await fetch(API_ENDPOINT + '/post', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ post_id: postId })
+  });
+
+  return await response.json() as EditPostResponse;
+}
