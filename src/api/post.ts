@@ -85,19 +85,19 @@ export async function editPost(post: EditPostData): Promise<EditPostResponse> {
 }
 
 export async function listPosts(params: FetchPostFilters | null = null): Promise<FetchPostListResponse> {
-  let queryParams = '';
+  const queryParams = [];
 
   if (params) {
     if (params.postId) {
       const postId = params.postId.toString().trim();
-      queryParams = 'post_id=' + postId;
+      queryParams.push('post_id=' + postId);
     }
     if (params.includeContent === true) {
-      queryParams = 'include_content=1';
+      queryParams.push('include_content=1');
     }
   }
 
-  const response = await fetch(API_ENDPOINT + '/post?' + queryParams);
+  const response = await fetch(API_ENDPOINT + '/post?' + queryParams.join('&'));
 
   return await response.json() as FetchPostListResponse;
 }
