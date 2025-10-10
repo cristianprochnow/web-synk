@@ -1,10 +1,10 @@
 import { ArrowLeft, Save, Trash } from 'lucide-react';
-import { redirect, useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { ActionButton } from '../../components/ActionButton';
 import { OutlineButton } from '../../components/OutlineButton';
 import { PageTitle } from '../../components/PageTitle';
 import '../../styles/screens/posts/edit.css';
-import { useEffect, useRef, useState } from 'react';
+import { type ChangeEvent, useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
   fetchBasicTemplates, hasBasicTemplates,
@@ -15,6 +15,7 @@ import {
   hasBasicIntProfiles, type IntProfileOption
 } from '../../api/intProfiles.ts';
 import {
+  deletePost,
   editPost,
   type EditPostData,
   hasPosts,
@@ -31,9 +32,10 @@ export function Edit() {
   const [isLoading, setLoading] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
-  const templateRef = useRef<HTMLSelectElement>(null);
-  const intProfileRef = useRef<HTMLSelectElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
+
+  const [templateValue, setTemplateValue] = useState('');
+  const [intProfileValue, setIntProfileValue] = useState('');
 
   useEffect(() => {
     loadData()
@@ -75,12 +77,9 @@ export function Edit() {
     if (contentRef.current) {
       contentRef.current.value = postInfo.post_content;
     }
-    if (templateRef.current) {
-      templateRef.current.value = postInfo.template_id.toString();
-    }
-    if (intProfileRef.current) {
-      intProfileRef.current.value = postInfo.int_profile_id.toString();
-    }
+
+    setTemplateValue(postInfo.template_id.toString());
+    setIntProfileValue(postInfo.int_profile_id.toString());
   }
 
   async function loadDropdowns() {
@@ -127,8 +126,8 @@ export function Edit() {
       post_id: Number(post_id),
       post_name: nameRef.current?.value || null,
       post_content: contentRef.current?.value || null,
-      template_id: templateRef.current ? Number(templateRef.current.value) : null,
-      int_profile_id: intProfileRef.current ? Number(intProfileRef.current.value) : null,
+      template_id: Number(templateValue),
+      int_profile_id: Number(intProfileValue),
     };
 
     const data = await editPost(postData);
@@ -140,11 +139,32 @@ export function Edit() {
     }
 
     toast.success('Publicação atualizada com sucesso!');
-    setTimeout(() => redirect('/posts'), 1000);
+    navigate('/posts');
   }
 
-  function handleOnDelete() {
+  async function handleOnDelete() {
+    if (!confirm('Tem certeza que deseja excluir essa publicação?')) {
+      return;
+    }
 
+    const data = await deletePost(Number(post_id));
+
+    if (!data.resource.ok) {
+      toast.error('Erro durante a exclusão da publicação: ' + data.resource.error);
+
+      return;
+    }
+
+    toast.success('Publicação excluída com sucesso!');
+    navigate('/posts');
+  }
+
+  function onChangeTemplate(event: ChangeEvent<HTMLSelectElement>) {
+    setTemplateValue(event.target.value);
+  }
+
+  function onChangeIntProfile(event: ChangeEvent<HTMLSelectElement>) {
+    setIntProfileValue(event.target.value);
   }
 
   return (
@@ -154,7 +174,7 @@ export function Edit() {
         <PageTitle>Editar publicação</PageTitle>
       </header>
 
-      <form className="form-add-container">
+      <form className="form-edit-container">
         <div className="field-group">
           <label htmlFor="post_name">Apelido</label>
           <input type="text" name="post_name" id="post_name" ref={nameRef}/>
@@ -165,10 +185,10 @@ export function Edit() {
             <div className={`loader ${!isLoading ? 'hidden' : ''}`}></div>
 
             <label htmlFor="template_id">Template</label>
-            <select name="template_id" id="template_id" defaultValue="" disabled={isLoading} ref={templateRef}>
+            <select name="template_id" id="template_id" disabled={isLoading} value={templateValue} onChange={onChangeTemplate}>
               <option value="" disabled>Selecione</option>
               {templateOptions.map(({ template_id, template_name }, templateIndex) => (
-                <option value={template_id} key={templateIndex}>{template_name}</option>
+                <option value={String(template_id)} key={templateIndex}>{template_name}</option>
               ))}
             </select>
           </div>
@@ -176,10 +196,10 @@ export function Edit() {
           <div className={`field-group ${isLoading ? 'disabled' : ''}`}>
             <div className={`loader ${!isLoading ? 'hidden' : ''}`}></div>
             <label htmlFor="int_profile_id">Perfil</label>
-            <select name="int_profile_id" id="int_profile_id" defaultValue="" disabled={isLoading} ref={intProfileRef}>
+            <select name="int_profile_id" id="int_profile_id" disabled={isLoading} value={intProfileValue} onChange={onChangeIntProfile}>
               <option value="" disabled>Selecione</option>
               {intProfileOptions.map(({ int_profile_id, int_profile_name, color_hex }, intProfileIndex) => (
-                <option style={{ color: `#${color_hex}` }} value={int_profile_id} key={intProfileIndex}>
+                <option style={{ color: `#${color_hex}` }} value={String(int_profile_id)} key={intProfileIndex}>
                   {int_profile_name}
                 </option>
               ))}

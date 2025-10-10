@@ -85,23 +85,35 @@ export async function editPost(post: EditPostData): Promise<EditPostResponse> {
 }
 
 export async function listPosts(params: FetchPostFilters | null = null): Promise<FetchPostListResponse> {
-  let queryParams = '';
+  const queryParams = [];
 
   if (params) {
     if (params.postId) {
       const postId = params.postId.toString().trim();
-      queryParams = 'post_id=' + postId;
+      queryParams.push('post_id=' + postId);
     }
     if (params.includeContent === true) {
-      queryParams = 'include_content=1';
+      queryParams.push('include_content=1');
     }
   }
 
-  const response = await fetch(API_ENDPOINT + '/post?' + queryParams);
+  const response = await fetch(API_ENDPOINT + '/post?' + queryParams.join('&'));
 
   return await response.json() as FetchPostListResponse;
 }
 
 export function hasPosts(data: FetchPostListResponse): boolean {
   return data.posts && data.posts.length > 0;
+}
+
+export async function deletePost(postId: number): Promise<EditPostResponse> {
+  const response = await fetch(API_ENDPOINT + '/post', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ post_id: postId })
+  });
+
+  return await response.json() as EditPostResponse;
 }
