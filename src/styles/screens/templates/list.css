@@ -1,1 +1,12 @@
-#screen-template-list {}
+#screen-template-list {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 1rem;
+  position: relative;
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
