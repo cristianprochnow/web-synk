@@ -4,6 +4,7 @@ import { ActionButton } from '../../components/ActionButton.tsx';
 import { ExternalLink, Plus, Paperclip, NotepadText, Link as LinkIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
 import { useState } from 'react';
+import emptyAvatar from '../../assets/empty.svg';
 
 type TemplateItem = {
   template_id: number;
@@ -14,6 +15,8 @@ type TemplateItem = {
 
 export function List() {
   const navigate = useNavigate();
+  const [isEmpty, setIsEmpty] = useState(false);
+  const [isLoading, setLoading] = useState(false);
   const [templates, setTemplates] = useState<TemplateItem[]>([
     {
       template_id: 1,
@@ -58,6 +61,18 @@ export function List() {
 
         <ActionButton label="Novo template" Icon={Plus} onClick={goToAdd}/>
       </header>
+
+      <div className={`loader ${!isLoading ? 'hidden' : ''}`}></div>
+      <div className={`empty ${isLoading || !isEmpty ? 'hidden' : ''}`}>
+        <div className="empty-avatar">
+          <img src={emptyAvatar} alt="Nenhum resultado encontrado!"/>
+        </div>
+
+        <p>
+          Ooops... Nenhum resultado encontrado. Que tal começar <Link
+          to="/posts/add">criando um novo?</Link>
+        </p>
+      </div>
 
       <div className="template-list-container">
         {templates.map((template, index) => (
