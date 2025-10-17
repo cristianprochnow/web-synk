@@ -1,54 +1,45 @@
 import '../../styles/screens/templates/list.css';
 import { PageTitle } from '../../components/PageTitle.tsx';
 import { ActionButton } from '../../components/ActionButton.tsx';
-import { ExternalLink, Plus, Paperclip, NotepadText, Link as LinkIcon } from 'lucide-react';
+import { ExternalLink, Plus, NotepadText, Link as LinkIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import emptyAvatar from '../../assets/empty.svg';
-
-type TemplateItem = {
-  template_id: number;
-  template_name: string;
-  template_url_import: string|null;
-  created_at: string;
-};
+import {
+  hasTemplates,
+  listTemplates,
+  type TemplateItem
+} from '../../api/templates.ts';
+import { toast } from 'react-toastify';
 
 export function List() {
   const navigate = useNavigate();
   const [isEmpty, setIsEmpty] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const [templates, setTemplates] = useState<TemplateItem[]>([
-    {
-      template_id: 1,
-      template_name: 'SHow demais',
-      template_url_import: 'https://react.dev/reference/react/useMemo#my-usememo-call-is-supposed-to-return-an-object-but-returns-undefined',
-      created_at: '01/02/2015 12:23:14',
-    },
-    {
-      template_id: 1,
-      template_name: 'SHow demais',
-      template_url_import: 'https://google.com',
-      created_at: '01/02/2015 12:23:14',
-    },
-    {
-      template_id: 1,
-      template_name: 'SHow demais',
-      template_url_import: 'https://google.com',
-      created_at: '01/02/2015 12:23:14',
-    },
-    {
-      template_id: 1,
-      template_name: 'SHow demais',
-      template_url_import: null,
-      created_at: '01/02/2015 12:23:14',
-    },
-    {
-      template_id: 1,
-      template_name: 'SHow demais',
-      template_url_import: 'https://google.com',
-      created_at: '01/02/2015 12:23:14',
+  const [templates, setTemplates] = useState<TemplateItem[]>([]);
+
+  useEffect(() => {
+    loadCards();
+  }, []);
+
+  async function loadCards() {
+    setLoading(true);
+
+    const data = await listTemplates();
+    const hasData = hasTemplates(data);
+
+    if (!data.resource.ok) {
+      toast.error(data.resource.error);
     }
-  ]);
+
+    if (!hasData) {
+      toast.info('Nenhum template encontrado :(');
+    }
+
+    setTemplates(hasData ? data.templates : []);
+    setIsEmpty(!hasData);
+    setLoading(false);
+  }
 
   function goToAdd() {
     navigate('/templates/add');
