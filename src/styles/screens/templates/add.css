@@ -1,1 +1,22 @@
-#screen-template-add {}
+#screen-template-add {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 1rem;
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 688px) {
+    header {
+      flex-direction: column;
+      align-items: stretch;
+
+      h1 {
+        text-align: center;
+      }
+    }
+  }
+}
