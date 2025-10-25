@@ -33,6 +33,24 @@ export type FetchTemplateListItemsResponse = {
   templates: TemplateItem[]
 };
 
+export type NewTemplateData = {
+  template_name: string | null;
+  template_content: string | null;
+  template_url_import: string | null;
+};
+
+export type CreatePostResponse = {
+  resource: {
+    ok: boolean
+    error: string
+  }
+  post: CreatePostResponseInfo
+};
+
+export type CreatePostResponseInfo = {
+  template_id: number
+};
+
 export async function fetchBasicTemplates(): Promise<FetchTemplateListResponse> {
   const response = await fetch(API_ENDPOINT + '/templates/basic');
 
@@ -63,4 +81,16 @@ export async function listTemplates(params: FetchTemplateFilters | null = null):
 
 export function hasTemplates(data: FetchTemplateListItemsResponse): boolean {
   return data.templates && data.templates.length > 0;
+}
+
+export async function addTemplate(template: NewTemplateData): Promise<CreatePostResponse> {
+  const response = await fetch(API_ENDPOINT + '/templates', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(template)
+  });
+
+  return await response.json() as CreatePostResponse;
 }
