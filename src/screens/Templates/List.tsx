@@ -1,16 +1,17 @@
-import '../../styles/screens/templates/list.css';
-import { PageTitle } from '../../components/PageTitle.tsx';
-import { ActionButton } from '../../components/ActionButton.tsx';
-import { ExternalLink, Plus, NotepadText, Link as LinkIcon } from 'lucide-react';
-import { Link, useNavigate } from 'react-router';
+import { ExternalLink, Link as LinkIcon, NotepadText, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import emptyAvatar from '../../assets/empty.svg';
+import { Link, useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 import {
   hasTemplates,
   listTemplates,
+  TEMPLATE_EMPTY_URL_VALUE,
   type TemplateItem
 } from '../../api/templates.ts';
-import { toast } from 'react-toastify';
+import emptyAvatar from '../../assets/empty.svg';
+import { ActionButton } from '../../components/ActionButton.tsx';
+import { PageTitle } from '../../components/PageTitle.tsx';
+import '../../styles/screens/templates/list.css';
 
 export function List() {
   const navigate = useNavigate();
@@ -69,7 +70,9 @@ export function List() {
         {templates.map((template, index) => (
           <div className="template-item" key={index}>
             <aside className="template-item-icon">
-              {template.template_url_import ? <LinkIcon /> : <NotepadText />}
+              {template.template_url_import && template.template_url_import !== TEMPLATE_EMPTY_URL_VALUE
+                ? <LinkIcon />
+                : <NotepadText />}
             </aside>
 
             <div className="template-item-info">
@@ -77,8 +80,10 @@ export function List() {
                 {template.template_name}
               </Link>
 
-              {template.template_url_import ? (
-                <a href={template.template_url_import} target="_blank" rel="nofollow noopener noreferrer" className="template-item-info-link">
+              {template.template_url_import && template.template_url_import !== TEMPLATE_EMPTY_URL_VALUE ? (
+                <a href={template.template_url_import}
+                  target="_blank" rel="nofollow noopener noreferrer"
+                  className="template-item-info-link">
                   <span>Conteúdo importado de <span className="url">{template.template_url_import}</span></span>
                   <ExternalLink />
                 </a>
