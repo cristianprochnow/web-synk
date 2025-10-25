@@ -51,6 +51,8 @@ export type CreatePostResponseInfo = {
   template_id: number
 };
 
+export const TEMPLATE_EMPTY_URL_VALUE = 'default';
+
 export async function fetchBasicTemplates(): Promise<FetchTemplateListResponse> {
   const response = await fetch(API_ENDPOINT + '/templates/basic');
 
