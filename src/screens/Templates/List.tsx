@@ -61,8 +61,7 @@ export function List() {
         </div>
 
         <p>
-          Ooops... Nenhum resultado encontrado. Que tal começar <Link
-          to="/posts/add">criando um novo?</Link>
+          Ooops... Nenhum resultado encontrado. Que tal começar <Link to="/posts/add">criando um novo?</Link>
         </p>
       </div>
 
