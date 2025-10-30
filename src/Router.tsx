@@ -4,6 +4,9 @@ import { Index } from './screens/Index'
 import { Add as IntegrationCredentialsAdd } from './screens/IntegrationCredentials/Add'
 import { Edit as IntegrationCredentialsEdit } from './screens/IntegrationCredentials/Edit'
 import { List as IntegrationCredentialsList } from './screens/IntegrationCredentials/List'
+import { Add as IntegrationProfilesAdd } from './screens/IntegrationProfiles/Add'
+import { Edit as IntegrationProfilesEdit } from './screens/IntegrationProfiles/Edit'
+import { List as IntegrationProfilesList } from './screens/IntegrationProfiles/List'
 import { NotFound } from './screens/NotFound'
 import { Add as PostAdd } from './screens/Posts/Add'
 import { Edit as PostEdit } from './screens/Posts/Edit'
@@ -31,6 +34,11 @@ export function Router() {
             <Route index element={<IntegrationCredentialsList />} />
             <Route path="add" element={<IntegrationCredentialsAdd />} />
             <Route path="edit/:int_credential_id" element={<IntegrationCredentialsEdit />} />
+          </Route>
+          <Route path="configs">
+            <Route index element={<IntegrationProfilesList />} />
+            <Route path="add" element={<IntegrationProfilesAdd />} />
+            <Route path="edit/:int_credential_id" element={<IntegrationProfilesEdit />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
