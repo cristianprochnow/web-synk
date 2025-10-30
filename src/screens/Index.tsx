@@ -37,19 +37,19 @@ export function Index() {
 
             <footer>
                 <nav>
-                    <MenuItem label="Templates" 
+                    <MenuItem label="Templates"
                         Icon={LayoutTemplate}
                         isActive={checkActiveRoute('templates')}
                         to="/templates" />
-                    <MenuItem label="Integrações" 
+                    <MenuItem label="Integrações"
                         Icon={Workflow}
                         isActive={checkActiveRoute('integrations')}
                         to="/integrations" />
-                    <MenuItem label="Perfis" 
+                    <MenuItem label="Perfis"
                         Icon={Blocks}
-                        isActive={checkActiveRoute('integration-profile')}
-                        to="/integration-profile" />
-                    <MenuItem label="Publicações" 
+                        isActive={checkActiveRoute('configs')}
+                        to="/configs" />
+                    <MenuItem label="Publicações"
                         Icon={Inbox}
                         isActive={checkActiveRoute('posts')}
                         to="/posts" />
