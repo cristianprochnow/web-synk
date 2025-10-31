@@ -38,7 +38,7 @@ export function Router() {
           <Route path="configs">
             <Route index element={<IntegrationProfilesList />} />
             <Route path="add" element={<IntegrationProfilesAdd />} />
-            <Route path="edit/:int_credential_id" element={<IntegrationProfilesEdit />} />
+            <Route path="edit/:int_profile_id" element={<IntegrationProfilesEdit />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
