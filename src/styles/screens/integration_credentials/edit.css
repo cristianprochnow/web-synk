@@ -1,1 +1,35 @@
-#screen-int-credentials-edit {}
+#screen-int-credentials-edit {
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 1rem;
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .form-edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    margin: 1.6rem 0;
+  }
+
+  footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: .8rem;
+  }
+
+  @media (max-width: 688px) {
+    header {
+      flex-direction: column;
+      align-items: stretch;
+
+      h1 {
+        text-align: center;
+      }
+    }
+  }
+}
