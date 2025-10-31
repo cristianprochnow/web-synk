@@ -6,7 +6,7 @@ export const INT_CREDENTIAL_TYPE_INSTAGRAM = 'instagram';
 
 export type IntCredentialsList = {
   int_credential_id: number;
-  int_profile_name: string;
+  int_credential_name: string;
   int_credential_type: string;
 };
 
