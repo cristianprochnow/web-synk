@@ -33,6 +33,40 @@ export type IntCredentialsByType = {
   [type: string]: IntCredentialsItem[]
 };
 
+export type NewIntCredentialData = {
+  int_credential_name: string | null
+  int_credential_type: string | null
+  int_credential_config: string | null
+};
+
+export type UpdateIntCredentialData = {
+  int_credential_id: number
+} & NewIntCredentialData;
+
+export type NewIntCredentialResponse = {
+  resource: {
+    ok: boolean
+    error: string
+  }
+  int_credential: NewIntCredentialResponseInfo
+};
+
+export type NewIntCredentialResponseInfo = {
+  int_credential_id: number
+};
+
+export type EditIntCredentialResponse = {
+  resource: {
+    ok: boolean
+    error: string
+  }
+  template: EditIntCredentialResponseInfo
+};
+
+export type EditIntCredentialResponseInfo = {
+  rows_affected: number
+};
+
 export async function listCredentials(params: FetchIntCredentialsFilters | null = null): Promise<FetchIntCredentialsListItemsResponse> {
   const queryParams = [];
 
@@ -52,4 +86,40 @@ export async function listCredentials(params: FetchIntCredentialsFilters | null 
 
 export function hasCredentials(data: FetchIntCredentialsListItemsResponse): boolean {
   return data.int_credentials && data.int_credentials.length > 0;
+}
+
+export async function addIntCredential(template: NewIntCredentialData): Promise<NewIntCredentialResponse> {
+  const response = await fetch(API_ENDPOINT + '/int_credentials', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(template)
+  });
+
+  return await response.json() as NewIntCredentialResponse;
+}
+
+export async function editIntCredential(post: UpdateIntCredentialData): Promise<EditIntCredentialResponse> {
+  const response = await fetch(API_ENDPOINT + '/int_credentials', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(post)
+  });
+
+  return await response.json() as EditIntCredentialResponse;
+}
+
+export async function deleteIntCredential(intCredentialId: number): Promise<EditIntCredentialResponse> {
+  const response = await fetch(API_ENDPOINT + '/int_credentials', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ int_credential_id: intCredentialId })
+  });
+
+  return await response.json() as EditIntCredentialResponse;
 }
