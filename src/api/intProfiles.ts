@@ -10,6 +10,7 @@ export type IntProfileOption = {
 export type IntProfileItem = {
   int_profile_id: number
   int_profile_name: string
+  color_id: number;
   color_hex: string
   color_name: string
   credentials: IntCredentialsList[]
@@ -47,6 +48,10 @@ export type NewIntProfileResponse = {
 
 export type UpdateIntProfileResponse = {
   rows_affected: number;
+};
+
+export type ListIntProfilesFilters = {
+  int_profile_id: number | null;
 };
 
 export async function fetchBasicIntProfiles(): Promise<FetchIntProfileListResponse<IntProfileOption>> {
@@ -103,4 +108,18 @@ export async function deleteIntProfile(intProfileId: number): Promise<IntProfile
   });
 
   return await response.json() as IntProfileResponse<UpdateIntProfileResponse>;
+}
+
+export async function listProfiles(params: ListIntProfilesFilters | null = null): Promise<FetchIntProfileListResponse<IntProfileItem>> {
+  const queryParams = [];
+
+  if (params) {
+    if (params.int_profile_id) {
+      queryParams.push('int_profile_id=' + params.int_profile_id.toString().trim());
+    }
+  }
+
+  const response = await fetch(API_ENDPOINT + '/int_profiles?' + queryParams.join('&'));
+
+  return await response.json() as FetchIntProfileListResponse<IntProfileItem>;
 }
