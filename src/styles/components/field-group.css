@@ -50,5 +50,15 @@
 
   select {
     cursor: pointer;
+    padding: .8rem;
+
+    option {
+      padding: .4rem .8rem;
+      border-radius: .64rem;
+    }
+
+    &[multiple] {
+      min-height: 10rem;
+    }
   }
 }
