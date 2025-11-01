@@ -1,5 +1,16 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
+
 export function Dashboard() {
-    return (
-        <div>Dashboard</div>
-    )
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate('/posts', {
+      replace: true
+    });
+  }, []);
+
+  return (
+    <div>Dashboard</div>
+  )
 }
