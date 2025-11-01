@@ -18,7 +18,6 @@ export function Add() {
   const [credentials, setCredentials] = useState<IntCredentialsItem[]>([]);
   const [selectedCredentials, setSelectedCredentials] = useState<string[]>([]);
   const [isLoading, setLoading] = useState(false);
-
   const nameRef = useRef<HTMLInputElement>(null);
   const colorRef = useRef<HTMLSelectElement>(null);
 
