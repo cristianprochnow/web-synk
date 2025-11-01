@@ -1,21 +1,21 @@
 import { ArrowLeft, Save } from 'lucide-react';
-import { useNavigate } from 'react-router';
-import { ActionButton } from '../../components/ActionButton';
-import { OutlineButton } from '../../components/OutlineButton';
-import { PageTitle } from '../../components/PageTitle';
-import '../../styles/screens/posts/add.css';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import {
-  fetchBasicTemplates, hasBasicTemplates,
-  type TemplateOption
-} from '../../api/templates.ts';
 import {
   fetchBasicIntProfiles,
   hasBasicIntProfiles, type IntProfileOption
 } from '../../api/intProfiles.ts';
 import { addPost, type NewPostData } from '../../api/post.ts';
+import {
+  fetchBasicTemplates, hasBasicTemplates,
+  type TemplateOption
+} from '../../api/templates.ts';
+import { ActionButton } from '../../components/ActionButton';
 import { Input, Select, Textarea } from '../../components/FieldGroup.tsx';
+import { OutlineButton } from '../../components/OutlineButton';
+import { PageTitle } from '../../components/PageTitle';
+import '../../styles/screens/posts/add.css';
 
 export function Add() {
   const navigate = useNavigate();
