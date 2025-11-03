@@ -55,7 +55,7 @@ export function Edit() {
       nameRef.current.value = credentialInfo.int_credential_name;
     }
     if (configRef.current) {
-      configRef.current.value = credentialInfo.int_credential_name;
+      configRef.current.value = credentialInfo.int_credential_config;
     }
 
     setType(credentialInfo.int_credential_type);

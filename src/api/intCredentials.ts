@@ -27,6 +27,7 @@ export type IntCredentialsItem = {
   int_credential_id: number;
   int_credential_name: string;
   int_credential_type: string;
+  int_credential_config: string;
 };
 
 export type IntCredentialsByType = {
