@@ -31,11 +31,11 @@
         font-size: 1.6rem;
         font-weight: 700;
         line-height: 2rem;
+        color: var(--color-black);
         transition: .3s;
-        color: var(--color-accent);
 
         &:hover {
-          color: var(--color-main);
+          color: var(--color-accent);
         }
       }
 

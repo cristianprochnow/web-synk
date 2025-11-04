@@ -1,4 +1,5 @@
 import { API_ENDPOINT } from './config';
+import type { IntCredentialsList } from './intCredentials';
 
 export type IntProfileOption = {
   int_profile_id: number
@@ -6,20 +7,119 @@ export type IntProfileOption = {
   color_hex: string
 };
 
-export type FetchIntProfileListResponse = {
+export type IntProfileItem = {
+  int_profile_id: number
+  int_profile_name: string
+  color_id: number;
+  color_hex: string
+  color_name: string
+  credentials: IntCredentialsList[]
+};
+
+export type FetchIntProfileListResponse<T> = {
   resource: {
     ok: boolean
     error: string
   }
-  int_profiles: IntProfileOption[]
+  int_profiles: T[]
 };
 
-export async function fetchBasicIntProfiles(): Promise<FetchIntProfileListResponse> {
+export type NewIntProfileData = {
+  int_profile_name: string | null;
+  color_id: number | null;
+  credentials: number[];
+};
+
+export type UpdateIntProfileData = {
+  int_profile_id: number;
+} & NewIntProfileData;
+
+export type IntProfileResponse<T> = {
+  resource: {
+    ok: boolean
+    error: string
+  }
+  int_profile: T
+};
+
+export type NewIntProfileResponse = {
+  int_profile_id: number;
+};
+
+export type UpdateIntProfileResponse = {
+  rows_affected: number;
+};
+
+export type ListIntProfilesFilters = {
+  int_profile_id: number | null;
+};
+
+export async function fetchBasicIntProfiles(): Promise<FetchIntProfileListResponse<IntProfileOption>> {
   const response = await fetch(API_ENDPOINT + '/int_profiles/basic');
 
-  return await response.json() as FetchIntProfileListResponse;
+  return await response.json() as FetchIntProfileListResponse<IntProfileOption>;
 }
 
-export function hasBasicIntProfiles(data: FetchIntProfileListResponse): boolean {
+export function hasBasicIntProfiles(data: FetchIntProfileListResponse<IntProfileOption>): boolean {
   return data.int_profiles && data.int_profiles.length > 0;
+}
+
+export async function fetchIntProfiles(): Promise<FetchIntProfileListResponse<IntProfileItem>> {
+  const response = await fetch(API_ENDPOINT + '/int_profiles');
+
+  return await response.json() as FetchIntProfileListResponse<IntProfileItem>;
+}
+
+export function hasProfiles(data: FetchIntProfileListResponse<IntProfileItem>): boolean {
+  return data.int_profiles && data.int_profiles.length > 0;
+}
+
+export async function addIntProfile(template: NewIntProfileData): Promise<IntProfileResponse<NewIntProfileResponse>> {
+  const response = await fetch(API_ENDPOINT + '/int_profiles', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(template)
+  });
+
+  return await response.json() as IntProfileResponse<NewIntProfileResponse>;
+}
+
+export async function editIntProfile(post: UpdateIntProfileData): Promise<IntProfileResponse<UpdateIntProfileResponse>> {
+  const response = await fetch(API_ENDPOINT + '/int_profiles', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(post)
+  });
+
+  return await response.json() as IntProfileResponse<UpdateIntProfileResponse>;
+}
+
+export async function deleteIntProfile(intProfileId: number): Promise<IntProfileResponse<UpdateIntProfileResponse>> {
+  const response = await fetch(API_ENDPOINT + '/int_profiles', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ int_profile_id: intProfileId })
+  });
+
+  return await response.json() as IntProfileResponse<UpdateIntProfileResponse>;
+}
+
+export async function listProfiles(params: ListIntProfilesFilters | null = null): Promise<FetchIntProfileListResponse<IntProfileItem>> {
+  const queryParams = [];
+
+  if (params) {
+    if (params.int_profile_id) {
+      queryParams.push('int_profile_id=' + params.int_profile_id.toString().trim());
+    }
+  }
+
+  const response = await fetch(API_ENDPOINT + '/int_profiles?' + queryParams.join('&'));
+
+  return await response.json() as FetchIntProfileListResponse<IntProfileItem>;
 }

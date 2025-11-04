@@ -1,4 +1,4 @@
-#screen-post-add {
+#screen-int-profiles-add {
   width: 100%;
   min-height: 100vh;
   padding-top: 1rem;
@@ -14,25 +14,11 @@
     flex-direction: column;
     gap: .8rem;
     margin: 1.6rem 0;
-
-    .col-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: .8rem;
-    }
   }
 
   footer {
     display: flex;
     justify-content: flex-end;
-  }
-
-  @media (max-width: 992px) {
-    .form-add-container {
-      .col-2 {
-        grid-template-columns: 1fr;
-      }
-    }
   }
 
   @media (max-width: 688px) {

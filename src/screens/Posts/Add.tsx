@@ -1,20 +1,21 @@
 import { ArrowLeft, Save } from 'lucide-react';
-import { useNavigate } from 'react-router';
-import { ActionButton } from '../../components/ActionButton';
-import { OutlineButton } from '../../components/OutlineButton';
-import { PageTitle } from '../../components/PageTitle';
-import '../../styles/screens/posts/add.css';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import {
-  fetchBasicTemplates, hasBasicTemplates,
-  type TemplateOption
-} from '../../api/templates.ts';
 import {
   fetchBasicIntProfiles,
   hasBasicIntProfiles, type IntProfileOption
 } from '../../api/intProfiles.ts';
 import { addPost, type NewPostData } from '../../api/post.ts';
+import {
+  fetchBasicTemplates, hasBasicTemplates,
+  type TemplateOption
+} from '../../api/templates.ts';
+import { ActionButton } from '../../components/ActionButton';
+import { Input, Select, Textarea } from '../../components/FieldGroup.tsx';
+import { OutlineButton } from '../../components/OutlineButton';
+import { PageTitle } from '../../components/PageTitle';
+import '../../styles/screens/posts/add.css';
 
 export function Add() {
   const navigate = useNavigate();
@@ -103,42 +104,25 @@ export function Add() {
       </header>
 
       <form className="form-add-container">
-        <div className="field-group">
-          <label htmlFor="post_name">Apelido</label>
-          <input type="text" name="post_name" id="post_name" ref={nameRef}/>
-        </div>
+        <Input label="Apelido" alias="post_name" ref={nameRef} />
 
         <div className="col-2">
-          <div className={`field-group ${isLoading ? 'disabled' : ''}`}>
-            <div className={`loader ${!isLoading ? 'hidden' : ''}`}></div>
+          <Select label="Template" alias="template_id" isLoading={isLoading} ref={templateRef}>
+            {templateOptions.map(({ template_id, template_name }, templateIndex) => (
+              <option value={template_id} key={templateIndex}>{template_name}</option>
+            ))}
+          </Select>
 
-            <label htmlFor="template_id">Template</label>
-            <select name="template_id" id="template_id" defaultValue="" disabled={isLoading} ref={templateRef}>
-              <option value="" disabled>Selecione</option>
-              {templateOptions.map(({ template_id, template_name }, templateIndex) => (
-                <option value={template_id} key={templateIndex}>{template_name}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className={`field-group ${isLoading ? 'disabled' : ''}`}>
-            <div className={`loader ${!isLoading ? 'hidden' : ''}`}></div>
-            <label htmlFor="int_profile_id">Perfil</label>
-            <select name="int_profile_id" id="int_profile_id" defaultValue="" disabled={isLoading} ref={intProfileRef}>
-              <option value="" disabled>Selecione</option>
-              {intProfileOptions.map(({ int_profile_id, int_profile_name, color_hex }, intProfileIndex) => (
-                <option style={{ color: `#${color_hex}` }} value={int_profile_id} key={intProfileIndex}>
-                  {int_profile_name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <Select label="Perfil" alias="int_profile_id" isLoading={isLoading} ref={intProfileRef}>
+            {intProfileOptions.map(({ int_profile_id, int_profile_name, color_hex }, intProfileIndex) => (
+              <option style={{ color: `#${color_hex}` }} value={int_profile_id} key={intProfileIndex}>
+                {int_profile_name}
+              </option>
+            ))}
+          </Select>
         </div>
 
-        <div className="field-group">
-          <label htmlFor="post_content">Conteúdo</label>
-          <textarea name="post_content" id="post_content" ref={contentRef}></textarea>
-        </div>
+        <Textarea label="Conteúdo" alias="post_content" ref={contentRef} />
       </form>
 
       <footer>
