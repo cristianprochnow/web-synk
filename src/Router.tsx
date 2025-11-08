@@ -7,10 +7,12 @@ import { List as IntegrationCredentialsList } from './screens/IntegrationCredent
 import { Add as IntegrationProfilesAdd } from './screens/IntegrationProfiles/Add'
 import { Edit as IntegrationProfilesEdit } from './screens/IntegrationProfiles/Edit'
 import { List as IntegrationProfilesList } from './screens/IntegrationProfiles/List'
+import { Login } from './screens/Login'
 import { NotFound } from './screens/NotFound'
 import { Add as PostAdd } from './screens/Posts/Add'
 import { Edit as PostEdit } from './screens/Posts/Edit'
 import { List as PostList } from './screens/Posts/List'
+import { Register } from './screens/Register'
 import { Add as TemplateAdd } from './screens/Templates/Add'
 import { Edit as TemplateEdit } from './screens/Templates/Edit'
 import { List as TemplateList } from './screens/Templates/List'
@@ -18,6 +20,8 @@ import { List as TemplateList } from './screens/Templates/List'
 export function Router() {
     return (
       <Routes>
+        <Route path="register" element={<Register />} />
+        <Route path="login" element={<Login />} />
         <Route path="/" errorElement={<NotFound />} element={<Index />}>
           <Route index element={<Dashboard />} />
           <Route path="templates">
