@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router'
+import { Redirector } from './components/Redirector'
 import { Dashboard } from './screens/Dashboard'
 import { Index } from './screens/Index'
 import { Add as IntegrationCredentialsAdd } from './screens/IntegrationCredentials/Add'
@@ -20,9 +21,9 @@ import { List as TemplateList } from './screens/Templates/List'
 export function Router() {
     return (
       <Routes>
-        <Route path="register" element={<Register />} />
-        <Route path="login" element={<Login />} />
-        <Route path="/" errorElement={<NotFound />} element={<Index />}>
+        <Route path="register" element={<Redirector.ToLogin><Register /></Redirector.ToLogin>} />
+        <Route path="login" element={<Redirector.ToLogin><Login /></Redirector.ToLogin>} />
+        <Route path="/" element={<Redirector.ToHome><Index /></Redirector.ToHome>}>
           <Route index element={<Dashboard />} />
           <Route path="templates">
             <Route index element={<TemplateList />} />
