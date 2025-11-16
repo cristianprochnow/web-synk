@@ -32,8 +32,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [headers, setHeaders] = useState<AuthHeadersProps|null>(null);
 
   useEffect(() => {
-    const sessionUser = sessionStorage.getItem('synk@user');
-    const sessionToken = sessionStorage.getItem('synk@token');
+    const sessionUser = localStorage.getItem('synk@user');
+    const sessionToken = localStorage.getItem('synk@token');
 
     if (sessionUser && sessionToken) {
       setUser((JSON.parse(sessionUser)) as User);
@@ -49,16 +49,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
       token
     });
 
-    sessionStorage.setItem('synk@user', JSON.stringify(user));
-    sessionStorage.setItem('synk@token', token);
+    localStorage.setItem('synk@user', JSON.stringify(user));
+    localStorage.setItem('synk@token', token);
   }
 
   function logOut() {
     setUser(null);
     setHeaders(null);
 
-    sessionStorage.removeItem('synk@user');
-    sessionStorage.removeItem('synk@token');
+    localStorage.removeItem('synk@user');
+    localStorage.removeItem('synk@token');
   }
 
   return (
