@@ -3,16 +3,18 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 import { listColors } from '../../api/colors';
-import { hasCredentials, listCredentials, type IntCredentialsItem } from '../../api/intCredentials';
-import { deleteIntProfile, editIntProfile, hasProfiles, listProfiles, type UpdateIntProfileData } from '../../api/intProfiles';
+import { hasCredentials, listCredentials, type FetchIntCredentialsListItemsResponse, type IntCredentialsItem } from '../../api/intCredentials';
+import { deleteIntProfile, editIntProfile, hasProfiles, listProfiles, type FetchIntProfileListResponse, type IntProfileItem, type IntProfileResponse, type UpdateIntProfileData, type UpdateIntProfileResponse } from '../../api/intProfiles';
 import { ActionButton } from '../../components/ActionButton';
 import { Input, Select } from '../../components/FieldGroup';
 import { OutlineButton } from '../../components/OutlineButton';
 import { PageTitle } from '../../components/PageTitle';
+import { useAuth } from '../../contexts/Auth';
 import '../../styles/screens/integration_profiles/edit.css';
 
 export function Edit() {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const { int_profile_id } = useParams();
 
@@ -41,10 +43,12 @@ export function Edit() {
   }
 
   async function loadIntCredentials() {
-    const data = await listCredentials({
-      credentialId: null,
-      includeConfig: false
-    });
+    const data = await auth.request(async (token) => {
+      return await listCredentials({
+        credentialId: null,
+        includeConfig: false
+      }, token);
+    }) as FetchIntCredentialsListItemsResponse;
     const hasData = hasCredentials(data);
 
     if (!hasData) {
@@ -57,9 +61,11 @@ export function Edit() {
   }
 
   async function loadProfiles() {
-    const data = await listProfiles({
-      int_profile_id: Number(int_profile_id)
-    });
+    const data = await auth.request(async (token) => {
+      return await listProfiles({
+        int_profile_id: Number(int_profile_id)
+      }, token);
+    }) as FetchIntProfileListResponse<IntProfileItem>;
     const hasData = hasProfiles(data);
 
     if (!data.resource.ok) {
@@ -105,7 +111,9 @@ export function Edit() {
       color_id: color,
       credentials: selectedCredentials.map(selected => Number(selected))
     };
-    const data = await editIntProfile(payload);
+    const data = await auth.request(async (token) => {
+      return await editIntProfile(payload, token);
+    }) as IntProfileResponse<UpdateIntProfileResponse>;
 
     if (!data.resource.ok) {
       toast.error('Erro durante a edição do perfil: ' + data.resource.error);
@@ -122,7 +130,9 @@ export function Edit() {
       return;
     }
 
-    const data = await deleteIntProfile(Number(int_profile_id));
+    const data = await auth.request(async (token) => {
+      return await deleteIntProfile(Number(int_profile_id), token);
+    }) as IntProfileResponse<UpdateIntProfileResponse>;
 
     if (!data.resource.ok) {
       toast.error('Erro durante a exclusão do perfil: ' + data.resource.error);

@@ -3,16 +3,18 @@ import { useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { listColors } from '../../api/colors';
-import { hasCredentials, listCredentials, type IntCredentialsItem } from '../../api/intCredentials';
-import { addIntProfile, type NewIntProfileData } from '../../api/intProfiles';
+import { hasCredentials, listCredentials, type FetchIntCredentialsListItemsResponse, type IntCredentialsItem } from '../../api/intCredentials';
+import { addIntProfile, type IntProfileResponse, type NewIntProfileData, type NewIntProfileResponse } from '../../api/intProfiles';
 import { ActionButton } from '../../components/ActionButton';
 import { Input, Select } from '../../components/FieldGroup';
 import { OutlineButton } from '../../components/OutlineButton';
 import { PageTitle } from '../../components/PageTitle';
+import { useAuth } from '../../contexts/Auth';
 import '../../styles/screens/integration_profiles/add.css';
 
 export function Add() {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const colors = useMemo(() => listColors(), []);
   const [credentials, setCredentials] = useState<IntCredentialsItem[]>([]);
@@ -32,10 +34,12 @@ export function Add() {
   async function loadIntCredentials() {
     setLoading(true);
 
-    const data = await listCredentials({
-      credentialId: null,
-      includeConfig: false
-    });
+    const data = await auth.request(async (token) => {
+      return await listCredentials({
+        credentialId: null,
+        includeConfig: false
+      }, token);
+    }) as FetchIntCredentialsListItemsResponse;
     const hasData = hasCredentials(data);
 
     setLoading(false);
@@ -67,7 +71,9 @@ export function Add() {
       color_id: colorRef.current ? Number(colorRef.current.value) : null,
       credentials: selectedCredentials.map(selected => Number(selected))
     };
-    const data = await addIntProfile(payload);
+    const data = await auth.request(async (token) => {
+      return await addIntProfile(payload, token);
+    }) as IntProfileResponse<NewIntProfileResponse>;
 
     if (!data.resource.ok) {
       toast.error('Erro durante a criação do perfil: ' + data.resource.error);
