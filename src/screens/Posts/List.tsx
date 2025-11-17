@@ -2,17 +2,20 @@ import { Blocks, LayoutTemplate, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import { hasPosts, listPosts, type FetchPostListResponse, type PostItem } from '../../api/post.ts';
 import emptyAvatar from '../../assets/empty.svg';
 import { ActionButton } from '../../components/ActionButton';
 import { PageTitle } from '../../components/PageTitle';
+import { useAuth } from '../../contexts/Auth.tsx';
 import '../../styles/screens/posts/list.css';
-import { hasPosts, listPosts, type PostItem } from '../../api/post.ts';
 
 export function List() {
+  const navigate = useNavigate();
+  const auth = useAuth();
+
   const [posts, setPosts] = useState<PostItem[]>([]);
   const [isEmpty, setIsEmpty] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     loadCards();
@@ -21,7 +24,9 @@ export function List() {
   async function loadCards() {
     setLoading(true);
 
-    const data = await listPosts();
+    const data = await auth.request(async (token) => {
+      return await listPosts(null, token);
+    }) as FetchPostListResponse;
     const hasData = hasPosts(data);
 
     if (!data.resource.ok) {

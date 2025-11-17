@@ -1,29 +1,37 @@
 import { ArrowLeft, Save, Trash } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router';
-import { ActionButton } from '../../components/ActionButton';
-import { OutlineButton } from '../../components/OutlineButton';
-import { PageTitle } from '../../components/PageTitle';
-import '../../styles/screens/posts/edit.css';
 import { type ChangeEvent, useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 import {
-  fetchBasicTemplates, hasBasicTemplates,
-  type TemplateOption
-} from '../../api/templates.ts';
-import {
   fetchBasicIntProfiles,
-  hasBasicIntProfiles, type IntProfileOption
+  type FetchIntProfileListResponse,
+  hasBasicIntProfiles,
+  type IntProfileOption
 } from '../../api/intProfiles.ts';
 import {
   deletePost,
   editPost,
   type EditPostData,
+  type EditPostResponse,
+  type FetchPostListResponse,
   hasPosts,
   listPosts
 } from '../../api/post.ts';
+import {
+  fetchBasicTemplates,
+  type FetchTemplateListResponse,
+  hasBasicTemplates,
+  type TemplateOption
+} from '../../api/templates.ts';
+import { ActionButton } from '../../components/ActionButton';
+import { OutlineButton } from '../../components/OutlineButton';
+import { PageTitle } from '../../components/PageTitle';
+import { useAuth } from '../../contexts/Auth.tsx';
+import '../../styles/screens/posts/edit.css';
 
 export function Edit() {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const { post_id } = useParams();
 
@@ -57,10 +65,12 @@ export function Edit() {
       return;
     }
 
-    const data = await listPosts({
-      postId: Number(post_id),
-      includeContent: true
-    });
+    const data = await auth.request(async (token) => {
+      return await listPosts({
+        postId: Number(post_id),
+        includeContent: true
+      }, token);
+    }) as FetchPostListResponse;
     const hasData = hasPosts(data);
 
     if (!hasData) {
@@ -92,7 +102,9 @@ export function Edit() {
   }
 
   async function loadTemplates() {
-    const data = await fetchBasicTemplates();
+    const data = await auth.request(async (token) => {
+      return await fetchBasicTemplates(token);
+    }) as FetchTemplateListResponse;
     const hasData = hasBasicTemplates(data);
 
     if (!data.resource.ok) {
@@ -107,7 +119,9 @@ export function Edit() {
   }
 
   async function loadIntProfiles() {
-    const data = await fetchBasicIntProfiles();
+    const data = await auth.request(async (token) => {
+      return await fetchBasicIntProfiles(token);
+    }) as FetchIntProfileListResponse<IntProfileOption>;
     const hasData = hasBasicIntProfiles(data);
 
     if (!data.resource.ok) {
@@ -130,7 +144,9 @@ export function Edit() {
       int_profile_id: Number(intProfileValue),
     };
 
-    const data = await editPost(postData);
+    const data = await auth.request(async (token) => {
+      return await editPost(postData, token);
+    }) as EditPostResponse;
 
     if (!data.resource.ok) {
       toast.error('Erro durante a atualização da publicação: ' + data.resource.error);
@@ -147,7 +163,9 @@ export function Edit() {
       return;
     }
 
-    const data = await deletePost(Number(post_id));
+    const data = await auth.request(async (token) => {
+      return await deletePost(Number(post_id), token);
+    }) as EditPostResponse;
 
     if (!data.resource.ok) {
       toast.error('Erro durante a exclusão da publicação: ' + data.resource.error);

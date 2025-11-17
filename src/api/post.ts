@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from './config';
+import { API_ENDPOINT, bearerHeader } from './config';
 
 export type NewPostData = {
   post_name: string | null,
@@ -60,31 +60,35 @@ export type FetchPostFilters = {
   includeContent: boolean | null | undefined
 };
 
-export async function addPost(post: NewPostData): Promise<CreatePostResponse> {
+export async function addPost(post: NewPostData, token: string): Promise<[number, CreatePostResponse]> {
   const response = await fetch(API_ENDPOINT + '/post', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
     },
     body: JSON.stringify(post)
   });
+  const content = await response.json() as CreatePostResponse;
 
-  return await response.json() as CreatePostResponse;
+  return [response.status, content];
 }
 
-export async function editPost(post: EditPostData): Promise<EditPostResponse> {
+export async function editPost(post: EditPostData, token: string): Promise<[number, EditPostResponse]> {
   const response = await fetch(API_ENDPOINT + '/post', {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
     },
     body: JSON.stringify(post)
   });
+  const content = await response.json() as EditPostResponse;
 
-  return await response.json() as EditPostResponse;
+  return [response.status, content];
 }
 
-export async function listPosts(params: FetchPostFilters | null = null): Promise<FetchPostListResponse> {
+export async function listPosts(params: FetchPostFilters | null = null, token: string): Promise<[number, FetchPostListResponse]> {
   const queryParams = [];
 
   if (params) {
@@ -97,23 +101,28 @@ export async function listPosts(params: FetchPostFilters | null = null): Promise
     }
   }
 
-  const response = await fetch(API_ENDPOINT + '/post?' + queryParams.join('&'));
+  const response = await fetch(API_ENDPOINT + '/post?' + queryParams.join('&'), {
+    headers: bearerHeader(token)
+  });
+  const content = await response.json() as FetchPostListResponse;
 
-  return await response.json() as FetchPostListResponse;
+  return [response.status, content];
 }
 
 export function hasPosts(data: FetchPostListResponse): boolean {
   return data.posts && data.posts.length > 0;
 }
 
-export async function deletePost(postId: number): Promise<EditPostResponse> {
+export async function deletePost(postId: number, token: string): Promise<[number, EditPostResponse]> {
   const response = await fetch(API_ENDPOINT + '/post', {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
     },
     body: JSON.stringify({ post_id: postId })
   });
+  const content = await response.json() as EditPostResponse;
 
-  return await response.json() as EditPostResponse;
+  return [response.status, content];
 }
