@@ -34,6 +34,7 @@ export type UserRegisterResponseInfo = {
 export async function login(data: LoginRequestData): Promise<UserResponse<UserLoginResponseInfo>> {
   const response = await fetch(AUTH_ENDPOINT + '/users/login', {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json'
     },
@@ -46,6 +47,7 @@ export async function login(data: LoginRequestData): Promise<UserResponse<UserLo
 export async function register(data: RegisterRequestData): Promise<UserResponse<UserRegisterResponseInfo>> {
   const response = await fetch(AUTH_ENDPOINT + '/users/register', {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json'
     },
@@ -53,4 +55,13 @@ export async function register(data: RegisterRequestData): Promise<UserResponse<
   });
 
   return await response.json() as UserResponse<UserRegisterResponseInfo>;
+}
+
+export async function refresh(): Promise<[number, UserResponse<UserLoginResponseInfo>]> {
+  const response = await fetch(AUTH_ENDPOINT + '/users/refresh', {
+    credentials: 'include'
+  });
+  const content = await response.json() as UserResponse<UserLoginResponseInfo>;
+
+  return [response.status, content];
 }
