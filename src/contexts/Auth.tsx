@@ -1,5 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useState, type PropsWithChildren } from 'react';
+import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
+import { NO_AUTH_CODE, OK_CODE } from '../api/config';
+import { refresh } from '../api/users';
 
 type User = {
   id: number;
@@ -17,6 +21,7 @@ type AuthContextProps = {
   headers: AuthHeadersProps|null;
   logIn: (token: string, user: User) => void;
   logOut: () => void;
+  request: (callback: (token: string) => Promise<[number, unknown]>) => Promise<unknown | void>
 };
 
 type AuthProviderProps = PropsWithChildren;
@@ -28,12 +33,14 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const navigate = useNavigate();
+
   const [user, setUser] = useState<User|null>(null);
   const [headers, setHeaders] = useState<AuthHeadersProps|null>(null);
 
   useEffect(() => {
-    const sessionUser = sessionStorage.getItem('synk@user');
-    const sessionToken = sessionStorage.getItem('synk@token');
+    const sessionUser = localStorage.getItem('synk@user');
+    const sessionToken = localStorage.getItem('synk@token');
 
     if (sessionUser && sessionToken) {
       setUser((JSON.parse(sessionUser)) as User);
@@ -49,16 +56,56 @@ export function AuthProvider({ children }: AuthProviderProps) {
       token
     });
 
-    sessionStorage.setItem('synk@user', JSON.stringify(user));
-    sessionStorage.setItem('synk@token', token);
+    localStorage.setItem('synk@user', JSON.stringify(user));
+    localStorage.setItem('synk@token', token);
   }
 
   function logOut() {
     setUser(null);
     setHeaders(null);
 
-    sessionStorage.removeItem('synk@user');
-    sessionStorage.removeItem('synk@token');
+    localStorage.removeItem('synk@user');
+    localStorage.removeItem('synk@token');
+  }
+
+  async function request(callback: (token: string) => Promise<[number, unknown]>): Promise<unknown> {
+    let accessToken = '';
+
+    if (headers) {
+      accessToken = headers.token;
+    }
+
+    const response = await callback(accessToken);
+    const httpCode = response[0];
+    const content = response[1];
+
+    if (httpCode === NO_AUTH_CODE) {
+      const [refreshHttpCode, refreshInfo] = await refresh();
+
+      if (refreshHttpCode !== OK_CODE || !refreshInfo.resource.ok) {
+        let errorMessage = 'Erro ao revalidar token de acesso';
+
+        if (refreshInfo.resource.error) {
+          errorMessage += ` [${refreshInfo.resource.error}]`;
+        }
+
+        toast.error(errorMessage);
+        logOut();
+        navigate('/login');
+
+        return {};
+      }
+
+      logIn(refreshInfo.user.token, {
+        email: refreshInfo.user.user_email,
+        name: refreshInfo.user.user_name,
+        id: refreshInfo.user.user_id,
+      });
+
+      return request(() => callback(refreshInfo.user.token));
+    }
+
+    return content;
   }
 
   return (
@@ -67,7 +114,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       user,
       headers,
       logIn,
-      logOut
+      logOut,
+      request
     }}>
       {children}
     </AuthContext.Provider>

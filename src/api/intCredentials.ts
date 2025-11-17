@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from "./config";
+import { API_ENDPOINT, bearerHeader } from "./config";
 
 export const INT_CREDENTIAL_TYPE_TWITTER = 'twitter';
 export const INT_CREDENTIAL_TYPE_LINKEDIN = 'linkedin';
@@ -68,7 +68,7 @@ export type EditIntCredentialResponseInfo = {
   rows_affected: number
 };
 
-export async function listCredentials(params: FetchIntCredentialsFilters | null = null): Promise<FetchIntCredentialsListItemsResponse> {
+export async function listCredentials(params: FetchIntCredentialsFilters | null = null, token: string): Promise<[number, FetchIntCredentialsListItemsResponse]> {
   const queryParams = [];
 
   if (params) {
@@ -80,47 +80,56 @@ export async function listCredentials(params: FetchIntCredentialsFilters | null 
     }
   }
 
-  const response = await fetch(API_ENDPOINT + '/int_credentials?' + queryParams.join('&'));
+  const response = await fetch(API_ENDPOINT + '/int_credentials?' + queryParams.join('&'), {
+    headers: bearerHeader(token)
+  });
+  const content = await response.json() as FetchIntCredentialsListItemsResponse;
 
-  return await response.json() as FetchIntCredentialsListItemsResponse;
+  return [response.status, content];
 }
 
 export function hasCredentials(data: FetchIntCredentialsListItemsResponse): boolean {
   return data.int_credentials && data.int_credentials.length > 0;
 }
 
-export async function addIntCredential(template: NewIntCredentialData): Promise<NewIntCredentialResponse> {
+export async function addIntCredential(template: NewIntCredentialData, token: string): Promise<[number, NewIntCredentialResponse]> {
   const response = await fetch(API_ENDPOINT + '/int_credentials', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
     },
     body: JSON.stringify(template)
   });
+  const content = await response.json() as NewIntCredentialResponse;
 
-  return await response.json() as NewIntCredentialResponse;
+  return [response.status, content];
 }
 
-export async function editIntCredential(post: UpdateIntCredentialData): Promise<EditIntCredentialResponse> {
+export async function editIntCredential(post: UpdateIntCredentialData, token: string): Promise<[number, EditIntCredentialResponse]> {
   const response = await fetch(API_ENDPOINT + '/int_credentials', {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
     },
     body: JSON.stringify(post)
   });
+  const content = await response.json() as EditIntCredentialResponse;
 
-  return await response.json() as EditIntCredentialResponse;
+  return [response.status, content];
 }
 
-export async function deleteIntCredential(intCredentialId: number): Promise<EditIntCredentialResponse> {
+export async function deleteIntCredential(intCredentialId: number, token: string): Promise<[number, EditIntCredentialResponse]> {
   const response = await fetch(API_ENDPOINT + '/int_credentials', {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
     },
     body: JSON.stringify({ int_credential_id: intCredentialId })
   });
+  const content = await response.json() as EditIntCredentialResponse;
 
-  return await response.json() as EditIntCredentialResponse;
+  return [response.status, content];
 }

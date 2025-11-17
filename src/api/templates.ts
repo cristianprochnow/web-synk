@@ -1,4 +1,4 @@
-import { API_ENDPOINT } from './config';
+import { API_ENDPOINT, bearerHeader } from './config';
 
 export type TemplateOption = {
   template_id: number
@@ -71,17 +71,20 @@ export type EditPostResponseInfo = {
 
 export const TEMPLATE_EMPTY_URL_VALUE = 'default';
 
-export async function fetchBasicTemplates(): Promise<FetchTemplateListResponse> {
-  const response = await fetch(API_ENDPOINT + '/templates/basic');
+export async function fetchBasicTemplates(token: string): Promise<[number, FetchTemplateListResponse]> {
+  const response = await fetch(API_ENDPOINT + '/templates/basic', {
+    headers: bearerHeader(token)
+  });
+  const content = await response.json() as FetchTemplateListResponse;
 
-  return await response.json() as FetchTemplateListResponse;
+  return [response.status, content];
 }
 
 export function hasBasicTemplates(data: FetchTemplateListResponse): boolean {
   return data.templates && data.templates.length > 0;
 }
 
-export async function listTemplates(params: FetchTemplateFilters | null = null): Promise<FetchTemplateListItemsResponse> {
+export async function listTemplates(params: FetchTemplateFilters | null = null, token: string): Promise<[number, FetchTemplateListItemsResponse]> {
   const queryParams = [];
 
   if (params) {
@@ -94,47 +97,57 @@ export async function listTemplates(params: FetchTemplateFilters | null = null):
     }
   }
 
-  const response = await fetch(API_ENDPOINT + '/templates?' + queryParams.join('&'));
+  const response = await fetch(API_ENDPOINT + '/templates?' + queryParams.join('&'), {
+    headers: bearerHeader(token)
+  });
 
-  return await response.json() as FetchTemplateListItemsResponse;
+  const content = await response.json() as FetchTemplateListItemsResponse;
+
+  return [response.status, content];
 }
 
 export function hasTemplates(data: FetchTemplateListItemsResponse): boolean {
   return data.templates && data.templates.length > 0;
 }
 
-export async function addTemplate(template: NewTemplateData): Promise<CreatePostResponse> {
+export async function addTemplate(template: NewTemplateData, token: string): Promise<[number, CreatePostResponse]> {
   const response = await fetch(API_ENDPOINT + '/templates', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
     },
     body: JSON.stringify(template)
   });
+  const content = await response.json() as CreatePostResponse;
 
-  return await response.json() as CreatePostResponse;
+  return [response.status, content];
 }
 
-export async function editTemplate(post: EditTemplateData): Promise<EditPostResponse> {
+export async function editTemplate(post: EditTemplateData, token: string): Promise<[number, EditPostResponse]> {
   const response = await fetch(API_ENDPOINT + '/templates', {
     method: 'PUT',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
     },
     body: JSON.stringify(post)
   });
+  const content = await response.json() as EditPostResponse;
 
-  return await response.json() as EditPostResponse;
+  return [response.status, content];
 }
 
-export async function deleteTemplate(templateId: number): Promise<EditPostResponse> {
+export async function deleteTemplate(templateId: number, token: string): Promise<[number, EditPostResponse]> {
   const response = await fetch(API_ENDPOINT + '/templates', {
     method: 'DELETE',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
     },
     body: JSON.stringify({ template_id: templateId })
   });
+  const content = await response.json() as EditPostResponse;
 
-  return await response.json() as EditPostResponse;
+  return [response.status, content];
 }

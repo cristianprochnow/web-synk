@@ -2,15 +2,18 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
+import type { CreatePostResponse } from '../../api/post.ts';
 import { addTemplate, TEMPLATE_EMPTY_URL_VALUE, type NewTemplateData } from '../../api/templates.ts';
 import { ActionButton } from '../../components/ActionButton.tsx';
 import { Input, Textarea } from '../../components/FieldGroup.tsx';
 import { OutlineButton } from '../../components/OutlineButton.tsx';
 import { PageTitle } from '../../components/PageTitle.tsx';
+import { useAuth } from '../../contexts/Auth.tsx';
 import '../../styles/screens/templates/add.css';
 
 export function Add() {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const nameRef = useRef<HTMLInputElement>(null);
   const contentRef = useRef<HTMLTextAreaElement>(null);
@@ -26,7 +29,9 @@ export function Add() {
       template_url_import: TEMPLATE_EMPTY_URL_VALUE,
     };
 
-    const data = await addTemplate(templateData);
+    const data = await auth.request(async (token) => {
+      return await addTemplate(templateData, token);
+    }) as CreatePostResponse;
 
     if (!data.resource.ok) {
       toast.error('Erro durante a criação do template: ' + data.resource.error);

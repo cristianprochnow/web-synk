@@ -2,14 +2,16 @@ import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import { fetchIntProfiles, hasProfiles, type IntProfileItem } from '../../api/intProfiles';
+import { fetchIntProfiles, hasProfiles, type FetchIntProfileListResponse, type IntProfileItem } from '../../api/intProfiles';
 import emptyAvatar from '../../assets/empty.svg';
 import { ActionButton } from '../../components/ActionButton';
 import { PageTitle } from '../../components/PageTitle';
+import { useAuth } from '../../contexts/Auth';
 import '../../styles/screens/integration_profiles/list.css';
 
 export function List() {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const [isEmpty, setIsEmpty] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -26,7 +28,9 @@ export function List() {
   async function loadProfiles() {
     setLoading(true);
 
-    const data = await fetchIntProfiles();
+    const data = await auth.request(async (token) => {
+      return await fetchIntProfiles(token);
+    }) as FetchIntProfileListResponse<IntProfileItem>;
     const hasData = hasProfiles(data);
 
     if (!data.resource.ok) {
