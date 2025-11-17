@@ -142,3 +142,6 @@ vite.config.ts.timestamp-*
 .vscode/
 .idea/
 .obsidian/
+
+# Credentials
+*.pem
