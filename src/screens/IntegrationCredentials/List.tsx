@@ -2,14 +2,17 @@ import { Plus, Radio } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import { hasCredentials, INT_CREDENTIAL_TYPE_INSTAGRAM, INT_CREDENTIAL_TYPE_LINKEDIN, INT_CREDENTIAL_TYPE_TWITTER, listCredentials, type IntCredentialsByType } from '../../api/intCredentials';
+import { hasCredentials, INT_CREDENTIAL_TYPE_INSTAGRAM, INT_CREDENTIAL_TYPE_LINKEDIN, INT_CREDENTIAL_TYPE_TWITTER, listCredentials, type FetchIntCredentialsListItemsResponse, type IntCredentialsByType } from '../../api/intCredentials';
 import emptyAvatar from '../../assets/empty.svg';
 import { ActionButton } from '../../components/ActionButton';
 import { PageTitle } from '../../components/PageTitle';
+import { useAuth } from '../../contexts/Auth';
 import '../../styles/screens/integration_credentials/list.css';
 
 export function List() {
   const navigate = useNavigate();
+  const auth = useAuth();
+
   const [isEmpty, setIsEmpty] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [credentials, setCredentials] = useState<IntCredentialsByType>({});
@@ -25,7 +28,9 @@ export function List() {
   async function loadCredentials() {
     setLoading(true);
 
-    const data = await listCredentials();
+    const data = await auth.request(async (token) => {
+      return await listCredentials(null, token);
+    }) as FetchIntCredentialsListItemsResponse;
     const hasData = hasCredentials(data);
 
     if (!data.resource.ok) {
