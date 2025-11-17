@@ -2,15 +2,18 @@ import { ArrowLeft, Save, Trash } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
-import { deleteTemplate, editTemplate, hasTemplates, listTemplates, TEMPLATE_EMPTY_URL_VALUE, type EditTemplateData } from '../../api/templates';
+import type { EditPostResponse } from '../../api/post';
+import { deleteTemplate, editTemplate, hasTemplates, listTemplates, TEMPLATE_EMPTY_URL_VALUE, type EditTemplateData, type FetchTemplateListItemsResponse } from '../../api/templates';
 import { ActionButton } from '../../components/ActionButton';
 import { Input, Textarea } from '../../components/FieldGroup';
 import { OutlineButton } from '../../components/OutlineButton';
 import { PageTitle } from '../../components/PageTitle';
+import { useAuth } from '../../contexts/Auth';
 import '../../styles/screens/templates/edit.css';
 
 export function Edit() {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const { template_id } = useParams();
 
@@ -32,10 +35,12 @@ export function Edit() {
       return;
     }
 
-    const data = await listTemplates({
-      templateId: Number(template_id),
-      includeContent: true
-    });
+    const data = await auth.request(async (token) => {
+      return await listTemplates({
+        templateId: Number(template_id),
+        includeContent: true
+      }, token);
+    }) as FetchTemplateListItemsResponse;
     const hasData = hasTemplates(data);
 
     if (!hasData) {
@@ -62,7 +67,9 @@ export function Edit() {
         template_url_import: TEMPLATE_EMPTY_URL_VALUE
       };
 
-      const data = await editTemplate(templateData);
+      const data = await auth.request(async (token) => {
+        return await editTemplate(templateData, token);
+      }) as EditPostResponse;
 
       if (!data.resource.ok) {
         toast.error('Erro durante a atualização do template: ' + data.resource.error);
@@ -79,7 +86,9 @@ export function Edit() {
         return;
       }
 
-      const data = await deleteTemplate(Number(template_id));
+      const data = await auth.request(async (token) => {
+        return await deleteTemplate(Number(template_id), token);
+      }) as EditPostResponse;
 
       if (!data.resource.ok) {
         toast.error('Erro durante a exclusão do template: ' + data.resource.error);

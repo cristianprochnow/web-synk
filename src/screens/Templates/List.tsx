@@ -6,15 +6,19 @@ import {
   hasTemplates,
   listTemplates,
   TEMPLATE_EMPTY_URL_VALUE,
+  type FetchTemplateListItemsResponse,
   type TemplateItem
 } from '../../api/templates.ts';
 import emptyAvatar from '../../assets/empty.svg';
 import { ActionButton } from '../../components/ActionButton.tsx';
 import { PageTitle } from '../../components/PageTitle.tsx';
+import { useAuth } from '../../contexts/Auth.tsx';
 import '../../styles/screens/templates/list.css';
 
 export function List() {
   const navigate = useNavigate();
+  const auth = useAuth();
+
   const [isEmpty, setIsEmpty] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [templates, setTemplates] = useState<TemplateItem[]>([]);
@@ -26,7 +30,10 @@ export function List() {
   async function loadCards() {
     setLoading(true);
 
-    const data = await listTemplates();
+    const data = await auth.request(async (token) => {
+      return await listTemplates(null, token);
+    }) as FetchTemplateListItemsResponse;
+
     const hasData = hasTemplates(data);
 
     if (!data.resource.ok) {
