@@ -54,3 +54,11 @@ This will print a path, for example: `C:\Users\YourUser\AppData\Local\mkcert`. G
 - After you click "Open" Firefox will show a small dialog asking what you want to trust this CA for.
 - You must check the box that says: "Trust this CA to identify websites."
 - Click `OK` to save, and `OK` again to close the certificate manager.
+
+## Network
+
+You can use a custom network for this services, using then `synk_network` you must create before run it. So, to create on just run command below once during initial setup.
+
+```
+docker network create synk_network
+```

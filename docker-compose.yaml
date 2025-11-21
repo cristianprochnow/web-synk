@@ -9,3 +9,10 @@ services:
       - ./:/app
     env_file: .env
     command: sh -c "yarn && yarn dev"
+
+    networks:
+      - synk_network
+
+networks:
+  synk_network:
+    external: true
