@@ -47,9 +47,11 @@ export function List() {
       [INT_CREDENTIAL_TYPE_LINKEDIN]: [],
     };
 
-    data.int_credentials.forEach(value => {
-      credentialsByType[value.int_credential_type].push(value);
-    });
+    if (hasData) {
+      data.int_credentials.forEach(value => {
+        credentialsByType[value.int_credential_type].push(value);
+      });
+    }
 
     setCredentials(hasData ? credentialsByType : {});
     setIsEmpty(!hasData);
@@ -76,59 +78,71 @@ export function List() {
       </div>
 
       <div className="credentials-groups-container">
-        <div className="credentials-group">
-          <div className="credential-header">
-            <div className="heading">
-              <Radio />
-              <span className="title">Instagram</span>
-            </div>
-            <div className="separator instagram"></div>
-          </div>
-
-          <div className="credential-list">
-            {credentials[INT_CREDENTIAL_TYPE_INSTAGRAM] ? credentials[INT_CREDENTIAL_TYPE_INSTAGRAM].map(credential => (
-              <div className="credential-item" key={credential.int_credential_id}>
-                <Link to={`/integrations/edit/${credential.int_credential_id}`}>{credential.int_credential_name}</Link>
+        {
+          credentials[INT_CREDENTIAL_TYPE_INSTAGRAM] ? (
+            <div className="credentials-group">
+              <div className="credential-header">
+                <div className="heading">
+                  <Radio />
+                  <span className="title">Instagram</span>
+                </div>
+                <div className="separator instagram"></div>
               </div>
-            )) : null}
-          </div>
-        </div>
 
-        <div className="credentials-group">
-          <div className="credential-header">
-            <div className="heading">
-              <Radio />
-              <span className="title">LinkedIn</span>
-            </div>
-            <div className="separator linkedin"></div>
-          </div>
-
-          <div className="credential-list">
-            {credentials[INT_CREDENTIAL_TYPE_LINKEDIN] ? credentials[INT_CREDENTIAL_TYPE_LINKEDIN].map(credential => (
-              <div className="credential-item" key={credential.int_credential_id}>
-                <Link to={`/integrations/edit/${credential.int_credential_id}`}>{credential.int_credential_name}</Link>
+              <div className="credential-list">
+                {credentials[INT_CREDENTIAL_TYPE_INSTAGRAM].map(credential => (
+                  <div className="credential-item" key={credential.int_credential_id}>
+                    <Link to={`/integrations/edit/${credential.int_credential_id}`}>{credential.int_credential_name}</Link>
+                  </div>
+                ))}
               </div>
-            )) : null}
-          </div>
-        </div>
-
-        <div className="credentials-group">
-          <div className="credential-header">
-            <div className="heading">
-              <Radio />
-              <span className="title">X</span>
             </div>
-            <div className="separator X"></div>
-          </div>
+          ) : null
+        }
 
-          <div className="credential-list">
-            {credentials[INT_CREDENTIAL_TYPE_TWITTER] ? credentials[INT_CREDENTIAL_TYPE_TWITTER].map(credential => (
-              <div className="credential-item" key={credential.int_credential_id}>
-                <Link to={`/integrations/edit/${credential.int_credential_id}`}>{credential.int_credential_name}</Link>
+        {
+          credentials[INT_CREDENTIAL_TYPE_LINKEDIN] ? (
+            <div className="credentials-group">
+              <div className="credential-header">
+                <div className="heading">
+                  <Radio />
+                  <span className="title">LinkedIn</span>
+                </div>
+                <div className="separator linkedin"></div>
               </div>
-            )): null}
-          </div>
-        </div>
+
+              <div className="credential-list">
+                {credentials[INT_CREDENTIAL_TYPE_LINKEDIN].map(credential => (
+                  <div className="credential-item" key={credential.int_credential_id}>
+                    <Link to={`/integrations/edit/${credential.int_credential_id}`}>{credential.int_credential_name}</Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null
+        }
+
+        {
+          credentials[INT_CREDENTIAL_TYPE_TWITTER] ? (
+            <div className="credentials-group">
+              <div className="credential-header">
+                <div className="heading">
+                  <Radio />
+                  <span className="title">X</span>
+                </div>
+                <div className="separator X"></div>
+              </div>
+
+              <div className="credential-list">
+                {credentials[INT_CREDENTIAL_TYPE_TWITTER].map(credential => (
+                  <div className="credential-item" key={credential.int_credential_id}>
+                    <Link to={`/integrations/edit/${credential.int_credential_id}`}>{credential.int_credential_name}</Link>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null
+        }
       </div>
     </div>
   );
