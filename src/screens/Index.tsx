@@ -2,9 +2,12 @@ import { Bell, Blocks, Inbox, LayoutTemplate, Workflow } from 'lucide-react'
 import { useCallback } from 'react'
 import { Outlet, useLocation } from 'react-router'
 import { MenuItem } from '../components/MenuItem'
+import { useAuth } from '../contexts/Auth'
 import '../styles/screens/index.css'
 
 export function Index() {
+    const auth = useAuth();
+
     const location = useLocation();
     const getPaths = useCallback(() => {
         return location.pathname.split('/').map(path => path.trim())
@@ -21,7 +24,7 @@ export function Index() {
                 <img src="../src/assets/synk-white.svg" alt="Synk's branding" />
 
                 <aside>
-                    <span className="greetings">Boa noite, Cristian!</span>
+                    <span className="greetings">Olá, {auth.user?.name}! 👋</span>
                     <span className="notification">
                         <Bell />
                     </span>
