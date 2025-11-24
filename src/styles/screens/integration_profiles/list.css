@@ -54,14 +54,6 @@
           font-weight: 600;
           border-radius: .56rem;
 
-          &.instagram {
-            background: linear-gradient(
-              to right,
-              #833ab4,#fd1d1d,#fcb045
-            );
-            color: #FFF;
-          }
-
           &.linkedin {
             background: linear-gradient(
               to right,
