@@ -179,6 +179,20 @@ export function Edit() {
 
   function onChangeTemplate(event: ChangeEvent<HTMLSelectElement>) {
     setTemplateValue(event.target.value);
+
+    let selectedTemplate: TemplateOption | null = null;
+
+    for (const templateOpt of templateOptions) {
+      if (templateOpt.template_id === Number(event.target.value)) {
+        selectedTemplate = templateOpt;
+
+        break;
+      }
+    }
+
+    if (selectedTemplate && contentRef.current) {
+      contentRef.current.value = String(selectedTemplate.template_content);
+    }
   }
 
   function onChangeIntProfile(event: ChangeEvent<HTMLSelectElement>) {
@@ -206,21 +220,7 @@ export function Edit() {
             <div className={`loader ${!isLoading ? 'hidden' : ''}`}></div>
 
             <label htmlFor="template_id">Template</label>
-            <select name="template_id" id="template_id" disabled={isLoading} value={templateValue} onChange={onChangeTemplate} onChange={event => {
-              let selectedTemplate: TemplateOption | null = null;
-
-              for (const templateOpt of templateOptions) {
-                if (templateOpt.template_id === Number(event.target.value)) {
-                  selectedTemplate = templateOpt;
-
-                  break;
-                }
-              }
-
-              if (selectedTemplate && contentRef.current) {
-                contentRef.current.value = String(selectedTemplate.template_content);
-              }
-            }}>
+            <select name="template_id" id="template_id" disabled={isLoading} value={templateValue} onChange={onChangeTemplate}>
               <option value="" disabled>Selecione</option>
               {templateOptions.map(({ template_id, template_name }, templateIndex) => (
                 <option value={String(template_id)} key={templateIndex}>{template_name}</option>
