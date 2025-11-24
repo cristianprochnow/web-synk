@@ -19,6 +19,13 @@ export type UserResponse<T> = {
   user: T
 };
 
+export type SimpleResponse = {
+  resource: {
+    ok: boolean
+    error: string
+  }
+};
+
 export type UserLoginResponseInfo = {
   user_id: number;
   user_name: string;
@@ -64,4 +71,12 @@ export async function refresh(): Promise<[number, UserResponse<UserLoginResponse
   const content = await response.json() as UserResponse<UserLoginResponseInfo>;
 
   return [response.status, content];
+}
+
+export async function logout(): Promise<SimpleResponse> {
+  const response = await fetch(AUTH_ENDPOINT + '/users/logout', {
+    credentials: 'include'
+  });
+
+  return await response.json() as SimpleResponse;
 }
