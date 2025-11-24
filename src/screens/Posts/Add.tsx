@@ -112,7 +112,10 @@ export function Add() {
         <PageTitle>Nova publicação</PageTitle>
       </header>
 
-      <form className="form-add-container">
+      <form className="form-add-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <Input label="Apelido" alias="post_name" ref={nameRef} />
 
         <div className="col-2">

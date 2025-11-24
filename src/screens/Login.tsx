@@ -50,7 +50,10 @@ export function Login() {
 
   return (
     <div id="screen-login">
-      <form>
+      <form onSubmit={event => {
+        event.preventDefault();
+        onHandlerLogin();
+      }}>
         <header>
           <img src="../src/assets/synk.svg" alt="Synk's branding" />
         </header>

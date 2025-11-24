@@ -70,7 +70,10 @@ export function Register() {
 
   return (
     <div id="screen-register">
-      <form>
+      <form onSubmit={event => {
+        event.preventDefault();
+        onHandlerRegister();
+      }}>
         <header>
           <img src="../src/assets/synk.svg" alt="Synk's branding" />
         </header>

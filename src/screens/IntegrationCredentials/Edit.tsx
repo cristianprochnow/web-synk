@@ -112,7 +112,10 @@ export function Edit() {
         <PageTitle>Editar integração</PageTitle>
       </header>
 
-      <form className="form-edit-container">
+      <form className="form-edit-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <Input label="Nome" alias="int_credential_name" ref={nameRef} />
         <Select label="Plataforma" alias="int_credential_type" isLoading={false} value={type} onChange={onChangeType}>
           <option className={INT_CREDENTIAL_TYPE_INSTAGRAM} value={INT_CREDENTIAL_TYPE_INSTAGRAM}>Instagram</option>

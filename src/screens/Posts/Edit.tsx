@@ -192,7 +192,10 @@ export function Edit() {
         <PageTitle>Editar publicação</PageTitle>
       </header>
 
-      <form className="form-edit-container">
+      <form className="form-edit-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <div className="field-group">
           <label htmlFor="post_name">Apelido</label>
           <input type="text" name="post_name" id="post_name" ref={nameRef}/>

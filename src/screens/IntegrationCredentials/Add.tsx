@@ -49,7 +49,10 @@ export function Add() {
         <PageTitle>Nova integração</PageTitle>
       </header>
 
-      <form className="form-add-container">
+      <form className="form-add-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <Input label="Nome" alias="int_credential_name" ref={nameRef} />
         <Select label="Plataforma" alias="int_credential_type" isLoading={false} ref={typeRef}>
           <option className={INT_CREDENTIAL_TYPE_INSTAGRAM} value={INT_CREDENTIAL_TYPE_INSTAGRAM}>Instagram</option>
