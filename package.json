@@ -30,6 +30,8 @@
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
     "babel-jest": "^30.1.2",
+    "babel-plugin-transform-import-meta": "^2.3.3",
+    "babel-plugin-transform-vite-meta-env": "^1.0.3",
     "eslint": "^9.33.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",

@@ -50,13 +50,6 @@
           background-color: var(--color-gray);
           border-radius: .24rem;
 
-          &.instagram {
-            background: linear-gradient(
-              to right,
-              #833ab4,#fd1d1d,#fcb045
-            );
-          }
-
           &.linkedin {
             background: linear-gradient(
               to right,

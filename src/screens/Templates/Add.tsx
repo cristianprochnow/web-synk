@@ -50,7 +50,10 @@ export function Add() {
         <PageTitle>Novo template</PageTitle>
       </header>
 
-      <form className="form-add-container">
+      <form className="form-add-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <Input label="Apelido" alias="template_name" ref={nameRef} />
         <Textarea label="Conteúdo" alias="template_content" ref={contentRef} />
       </form>

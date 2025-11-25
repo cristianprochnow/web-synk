@@ -1,11 +1,14 @@
-import { Bell, Blocks, Inbox, LayoutTemplate, Workflow } from 'lucide-react'
+import { Blocks, Inbox, LayoutTemplate, Workflow } from 'lucide-react'
 import { useCallback } from 'react'
-import { Outlet, useLocation } from 'react-router'
+import { Outlet, useLocation, useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
+import { logout } from '../api/users'
 import { MenuItem } from '../components/MenuItem'
 import { useAuth } from '../contexts/Auth'
 import '../styles/screens/index.css'
 
 export function Index() {
+    const navigate = useNavigate();
     const auth = useAuth();
 
     const location = useLocation();
@@ -18,6 +21,26 @@ export function Index() {
         return paths.includes(route)
     }, [getPaths])
 
+    const onHandleLogout = useCallback(async () => {
+      if (!confirm('Tem certeza que deseja realizar o logout?')) return;
+
+      const data = await logout();
+
+      if (!data.resource.ok) {
+        toast.error('Erro no logout: ' + data.resource.error);
+
+        return;
+      }
+
+      auth.logOut();
+
+      toast.success('Logout realizado com sucesso! Redirecionando...');
+
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+    }, []);
+
     return (
         <div id="screen-index">
             <header className="wrapper">
@@ -25,10 +48,7 @@ export function Index() {
 
                 <aside>
                     <span className="greetings">Olá, {auth.user?.name}! 👋</span>
-                    <span className="notification">
-                        <Bell />
-                    </span>
-                    <span className="avatar">
+                    <span className="avatar" onClick={onHandleLogout}>
                         <img src="/synk.svg" alt="User Avatar" />
                     </span>
                 </aside>

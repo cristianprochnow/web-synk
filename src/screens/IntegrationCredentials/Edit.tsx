@@ -2,7 +2,7 @@ import { ArrowLeft, Save, Trash } from 'lucide-react';
 import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
-import { deleteIntCredential, editIntCredential, hasCredentials, INT_CREDENTIAL_TYPE_INSTAGRAM, INT_CREDENTIAL_TYPE_LINKEDIN, INT_CREDENTIAL_TYPE_TWITTER, listCredentials, type EditIntCredentialResponse, type FetchIntCredentialsListItemsResponse, type UpdateIntCredentialData } from '../../api/intCredentials';
+import { deleteIntCredential, editIntCredential, hasCredentials, INT_CREDENTIAL_TYPE_LINKEDIN, INT_CREDENTIAL_TYPE_TWITTER, listCredentials, type EditIntCredentialResponse, type FetchIntCredentialsListItemsResponse, type UpdateIntCredentialData } from '../../api/intCredentials';
 import { ActionButton } from '../../components/ActionButton';
 import { Input, Select, Textarea } from '../../components/FieldGroup';
 import { OutlineButton } from '../../components/OutlineButton';
@@ -112,10 +112,12 @@ export function Edit() {
         <PageTitle>Editar integração</PageTitle>
       </header>
 
-      <form className="form-edit-container">
+      <form className="form-edit-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <Input label="Nome" alias="int_credential_name" ref={nameRef} />
         <Select label="Plataforma" alias="int_credential_type" isLoading={false} value={type} onChange={onChangeType}>
-          <option className={INT_CREDENTIAL_TYPE_INSTAGRAM} value={INT_CREDENTIAL_TYPE_INSTAGRAM}>Instagram</option>
           <option className={INT_CREDENTIAL_TYPE_LINKEDIN} value={INT_CREDENTIAL_TYPE_LINKEDIN}>LinkedIn</option>
           <option className={INT_CREDENTIAL_TYPE_TWITTER} value={INT_CREDENTIAL_TYPE_TWITTER}>X</option>
         </Select>

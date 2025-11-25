@@ -151,7 +151,10 @@ export function Edit() {
         <PageTitle>Editar perfil</PageTitle>
       </header>
 
-      <form className="form-edit-container">
+      <form className="form-edit-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <Input label="Apelido" alias="int_profile_name" ref={nameRef} />
 
         <Select label="Cor" alias="color_id" isLoading={false} value={color} onChange={onChangeColor}>

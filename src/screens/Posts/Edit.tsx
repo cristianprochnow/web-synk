@@ -18,9 +18,9 @@ import {
   listPosts
 } from '../../api/post.ts';
 import {
-  fetchBasicTemplates,
   type FetchTemplateListResponse,
   hasBasicTemplates,
+  listTemplates,
   type TemplateOption
 } from '../../api/templates.ts';
 import { ActionButton } from '../../components/ActionButton';
@@ -103,7 +103,7 @@ export function Edit() {
 
   async function loadTemplates() {
     const data = await auth.request(async (token) => {
-      return await fetchBasicTemplates(token);
+      return await listTemplates({ includeContent: true, templateId: null }, token);
     }) as FetchTemplateListResponse;
     const hasData = hasBasicTemplates(data);
 
@@ -179,6 +179,20 @@ export function Edit() {
 
   function onChangeTemplate(event: ChangeEvent<HTMLSelectElement>) {
     setTemplateValue(event.target.value);
+
+    let selectedTemplate: TemplateOption | null = null;
+
+    for (const templateOpt of templateOptions) {
+      if (templateOpt.template_id === Number(event.target.value)) {
+        selectedTemplate = templateOpt;
+
+        break;
+      }
+    }
+
+    if (selectedTemplate && contentRef.current) {
+      contentRef.current.value = String(selectedTemplate.template_content);
+    }
   }
 
   function onChangeIntProfile(event: ChangeEvent<HTMLSelectElement>) {
@@ -192,7 +206,10 @@ export function Edit() {
         <PageTitle>Editar publicação</PageTitle>
       </header>
 
-      <form className="form-edit-container">
+      <form className="form-edit-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <div className="field-group">
           <label htmlFor="post_name">Apelido</label>
           <input type="text" name="post_name" id="post_name" ref={nameRef}/>

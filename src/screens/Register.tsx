@@ -1,7 +1,8 @@
 import { Eye, EyeClosed, LogIn } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
+import { REGISTER_TOKEN } from '../api/config';
 import { register, type RegisterRequestData } from '../api/users';
 import { ActionButton } from '../components/ActionButton';
 import { Input } from '../components/FieldGroup';
@@ -12,6 +13,8 @@ export function Register() {
   const auth = useAuth();
   const navigate = useNavigate();
 
+  const { token } = useParams();
+
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
@@ -19,6 +22,17 @@ export function Register() {
 
   const [isPassVisible, setPassVisible] = useState(false);
   const [isConfirmPassVisible, setConfirmPassVisible] = useState(false);
+
+  useEffect(handleVerificationToken, []);
+
+  function handleVerificationToken() {
+    const isValid = token && token === REGISTER_TOKEN;
+
+    if (!isValid) {
+      toast.error('Acesso inválido para cadastrar novo usuário.');
+      navigate('/');
+    }
+  }
 
   function onPassVisible() {
     setPassVisible(!isPassVisible);
@@ -70,7 +84,10 @@ export function Register() {
 
   return (
     <div id="screen-register">
-      <form>
+      <form onSubmit={event => {
+        event.preventDefault();
+        onHandlerRegister();
+      }}>
         <header>
           <img src="../src/assets/synk.svg" alt="Synk's branding" />
         </header>

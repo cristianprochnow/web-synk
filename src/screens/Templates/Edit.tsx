@@ -107,7 +107,10 @@ export function Edit() {
         <PageTitle>Editar template</PageTitle>
       </header>
 
-      <form className="form-edit-container">
+      <form className="form-edit-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <Input label="Apelido" alias="template_name" ref={nameRef} />
         <Textarea label="Conteúdo" alias="template_content" ref={contentRef} />
       </form>

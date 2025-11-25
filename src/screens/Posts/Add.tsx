@@ -8,7 +8,8 @@ import {
 } from '../../api/intProfiles.ts';
 import { addPost, type CreatePostResponse, type NewPostData } from '../../api/post.ts';
 import {
-  fetchBasicTemplates, hasBasicTemplates,
+  hasBasicTemplates,
+  listTemplates,
   type FetchTemplateListResponse,
   type TemplateOption
 } from '../../api/templates.ts';
@@ -51,7 +52,7 @@ export function Add() {
 
   async function loadTemplates() {
     const data = await auth.request(async (token) => {
-      return await fetchBasicTemplates(token);
+      return await listTemplates({ includeContent: true, templateId: null }, token);
     }) as FetchTemplateListResponse;
     const hasData = hasBasicTemplates(data);
 
@@ -112,11 +113,28 @@ export function Add() {
         <PageTitle>Nova publicação</PageTitle>
       </header>
 
-      <form className="form-add-container">
+      <form className="form-add-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <Input label="Apelido" alias="post_name" ref={nameRef} />
 
         <div className="col-2">
-          <Select label="Template" alias="template_id" isLoading={isLoading} ref={templateRef}>
+          <Select label="Template" alias="template_id" isLoading={isLoading} ref={templateRef} onChange={event => {
+            let selectedTemplate: TemplateOption | null = null;
+
+            for (const templateOpt of templateOptions) {
+              if (templateOpt.template_id === Number(event.target.value)) {
+                selectedTemplate = templateOpt;
+
+                break;
+              }
+            }
+
+            if (selectedTemplate && contentRef.current) {
+              contentRef.current.value = String(selectedTemplate.template_content);
+            }
+          }}>
             {templateOptions.map(({ template_id, template_name }, templateIndex) => (
               <option value={template_id} key={templateIndex}>{template_name}</option>
             ))}

@@ -92,7 +92,10 @@ export function Add() {
         <PageTitle>Novo perfil</PageTitle>
       </header>
 
-      <form className="form-add-container">
+      <form className="form-add-container" onSubmit={event => {
+        event.preventDefault();
+        handleOnSave();
+      }}>
         <Input label="Apelido" alias="int_profile_name" ref={nameRef} />
 
         <Select label="Cor" alias="color_id" isLoading={false} ref={colorRef} defaultValue="">

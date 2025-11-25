@@ -3,6 +3,7 @@ import { API_ENDPOINT, bearerHeader } from './config';
 export type TemplateOption = {
   template_id: number
   template_name: string
+  template_content: string | null | undefined
 };
 
 export type FetchTemplateListResponse = {
