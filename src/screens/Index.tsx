@@ -49,7 +49,7 @@ export function Index() {
                 <aside>
                     <span className="greetings">Olá, {auth.user?.name}! 👋</span>
                     <span className="avatar" onClick={onHandleLogout}>
-                        <img src="/synk.svg" alt="User Avatar" />
+                        <img src="/synk-icon.svg" alt="User Avatar" />
                     </span>
                 </aside>
             </header>
