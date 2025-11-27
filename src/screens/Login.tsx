@@ -1,6 +1,6 @@
 import { Eye, EyeClosed, LogIn } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { login, type LoginRequestData } from '../api/users';
 import { ActionButton } from '../components/ActionButton';
@@ -70,6 +70,10 @@ export function Login() {
 
           <ActionButton label="Enviar" Icon={LogIn} onClick={onHandlerLogin} />
         </div>
+
+        <footer>
+          Ainda não possui uma conta? <Link to="/register">Crie aqui</Link>
+        </footer>
       </form>
     </div>
   );

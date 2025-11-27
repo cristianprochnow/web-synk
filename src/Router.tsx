@@ -21,7 +21,7 @@ import { List as TemplateList } from './screens/Templates/List'
 export function Router() {
     return (
       <Routes>
-        <Route path="register/:token" element={<Redirector.ToLogin><Register /></Redirector.ToLogin>} />
+        <Route path="register" element={<Redirector.ToLogin><Register /></Redirector.ToLogin>} />
         <Route path="login" element={<Redirector.ToLogin><Login /></Redirector.ToLogin>} />
         <Route path="/" element={<Redirector.ToHome><Index /></Redirector.ToHome>}>
           <Route index element={<Dashboard />} />
