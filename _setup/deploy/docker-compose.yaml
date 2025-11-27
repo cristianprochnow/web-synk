@@ -1,17 +1,13 @@
 services:
   app:
-    image: node:22-alpine
     container_name: synk_web
+    build: .                 # Manda construir usando o Dockerfile da pasta atual
     ports:
-      - ${PORT}:8080
-    working_dir: /app
-    volumes:
-      - ./:/app
-    env_file: .env
-    command: sh -c "yarn && yarn dev"
-
+      - ${PORT}:80           # Mapeia a porta da VM para a porta 80 interna do Nginx
+    env_file: .env           # Ainda útil, mas leia a observação abaixo sobre Variáveis
     networks:
       - synk_network
+    restart: always
 
 networks:
   synk_network:
