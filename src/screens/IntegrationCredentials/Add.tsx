@@ -2,7 +2,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import { addIntCredential, INT_CREDENTIAL_TYPE_LINKEDIN, INT_CREDENTIAL_TYPE_TWITTER, type NewIntCredentialData, type NewIntCredentialResponse } from '../../api/intCredentials';
+import { addIntCredential, INT_CREDENTIAL_TYPE_DISCORD, INT_CREDENTIAL_TYPE_TELEGRAM, type NewIntCredentialData, type NewIntCredentialResponse } from '../../api/intCredentials';
 import { ActionButton } from '../../components/ActionButton';
 import { Input, Select, Textarea } from '../../components/FieldGroup';
 import { OutlineButton } from '../../components/OutlineButton';
@@ -55,8 +55,8 @@ export function Add() {
       }}>
         <Input label="Nome" alias="int_credential_name" ref={nameRef} />
         <Select label="Plataforma" alias="int_credential_type" isLoading={false} ref={typeRef}>
-          <option className={INT_CREDENTIAL_TYPE_LINKEDIN} value={INT_CREDENTIAL_TYPE_LINKEDIN}>LinkedIn</option>
-          <option className={INT_CREDENTIAL_TYPE_TWITTER} value={INT_CREDENTIAL_TYPE_TWITTER}>X</option>
+          <option className={INT_CREDENTIAL_TYPE_TELEGRAM} value={INT_CREDENTIAL_TYPE_TELEGRAM}>Telegram</option>
+          <option className={INT_CREDENTIAL_TYPE_DISCORD} value={INT_CREDENTIAL_TYPE_DISCORD}>Discord</option>
         </Select>
         <Textarea label="Configuração" alias="int_credential_config" ref={configRef} />
       </form>
