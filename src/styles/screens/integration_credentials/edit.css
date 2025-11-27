@@ -14,6 +14,14 @@
     flex-direction: column;
     gap: .8rem;
     margin: 1.6rem 0;
+
+    .telegram {
+      color: #0088cc;
+    }
+
+    .discord {
+      color: #7289da;
+    }
   }
 
   footer {

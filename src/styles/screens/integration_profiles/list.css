@@ -54,16 +54,13 @@
           font-weight: 600;
           border-radius: .56rem;
 
-          &.linkedin {
-            background: linear-gradient(
-              to right,
-              #0077b5,#00a0dc
-            );
+          &.telegram {
+            background: #0088cc;
             color: #FFF;
           }
 
-          &.twitter {
-            background: #000;
+          &.discord {
+            background: #7289da;
             color: #FFF;
           }
 

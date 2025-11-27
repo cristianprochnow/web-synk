@@ -2,7 +2,7 @@ import { Plus, Radio } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
-import { hasCredentials, INT_CREDENTIAL_TYPE_LINKEDIN, INT_CREDENTIAL_TYPE_TWITTER, listCredentials, type FetchIntCredentialsListItemsResponse, type IntCredentialsByType } from '../../api/intCredentials';
+import { hasCredentials, INT_CREDENTIAL_TYPE_DISCORD, INT_CREDENTIAL_TYPE_TELEGRAM, listCredentials, type FetchIntCredentialsListItemsResponse, type IntCredentialsByType } from '../../api/intCredentials';
 import emptyAvatar from '../../assets/empty.svg';
 import { ActionButton } from '../../components/ActionButton';
 import { PageTitle } from '../../components/PageTitle';
@@ -42,8 +42,8 @@ export function List() {
     }
 
     const credentialsByType: IntCredentialsByType = {
-      [INT_CREDENTIAL_TYPE_TWITTER]: [],
-      [INT_CREDENTIAL_TYPE_LINKEDIN]: [],
+      [INT_CREDENTIAL_TYPE_TELEGRAM]: [],
+      [INT_CREDENTIAL_TYPE_DISCORD]: [],
     };
 
     if (hasData) {
@@ -78,18 +78,18 @@ export function List() {
 
       <div className="credentials-groups-container">
         {
-          credentials[INT_CREDENTIAL_TYPE_LINKEDIN] ? (
+          credentials[INT_CREDENTIAL_TYPE_TELEGRAM] ? (
             <div className="credentials-group">
               <div className="credential-header">
                 <div className="heading">
                   <Radio />
-                  <span className="title">LinkedIn</span>
+                  <span className="title">Telegram</span>
                 </div>
-                <div className="separator linkedin"></div>
+                <div className="separator telegram"></div>
               </div>
 
               <div className="credential-list">
-                {credentials[INT_CREDENTIAL_TYPE_LINKEDIN].map(credential => (
+                {credentials[INT_CREDENTIAL_TYPE_TELEGRAM].map(credential => (
                   <div className="credential-item" key={credential.int_credential_id}>
                     <Link to={`/integrations/edit/${credential.int_credential_id}`}>{credential.int_credential_name}</Link>
                   </div>
@@ -100,18 +100,18 @@ export function List() {
         }
 
         {
-          credentials[INT_CREDENTIAL_TYPE_TWITTER] ? (
+          credentials[INT_CREDENTIAL_TYPE_DISCORD] ? (
             <div className="credentials-group">
               <div className="credential-header">
                 <div className="heading">
                   <Radio />
-                  <span className="title">X</span>
+                  <span className="title">Discord</span>
                 </div>
-                <div className="separator X"></div>
+                <div className="separator discord"></div>
               </div>
 
               <div className="credential-list">
-                {credentials[INT_CREDENTIAL_TYPE_TWITTER].map(credential => (
+                {credentials[INT_CREDENTIAL_TYPE_DISCORD].map(credential => (
                   <div className="credential-item" key={credential.int_credential_id}>
                     <Link to={`/integrations/edit/${credential.int_credential_id}`}>{credential.int_credential_name}</Link>
                   </div>

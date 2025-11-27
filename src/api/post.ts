@@ -31,6 +31,13 @@ export type EditPostResponse = {
   post: EditPostResponseInfo
 };
 
+export type PublishPostResponse = {
+  resource: {
+    ok: boolean
+    error: string
+  }
+};
+
 export type EditPostResponseInfo = {
   rows_affected: number
 };
@@ -123,6 +130,20 @@ export async function deletePost(postId: number, token: string): Promise<[number
     body: JSON.stringify({ post_id: postId })
   });
   const content = await response.json() as EditPostResponse;
+
+  return [response.status, content];
+}
+
+export async function publishPost(postId: number, token: string): Promise<[number, PublishPostResponse]> {
+  const response = await fetch(API_ENDPOINT + '/post/publish', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...bearerHeader(token)
+    },
+    body: JSON.stringify({ post_id: postId })
+  });
+  const content = await response.json() as PublishPostResponse;
 
   return [response.status, content];
 }

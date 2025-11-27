@@ -1,7 +1,7 @@
 import { API_ENDPOINT, bearerHeader } from "./config";
 
-export const INT_CREDENTIAL_TYPE_TWITTER = 'twitter';
-export const INT_CREDENTIAL_TYPE_LINKEDIN = 'linkedin';
+export const INT_CREDENTIAL_TYPE_TELEGRAM = 'telegram';
+export const INT_CREDENTIAL_TYPE_DISCORD = 'discord';
 
 export type IntCredentialsList = {
   int_credential_id: number;

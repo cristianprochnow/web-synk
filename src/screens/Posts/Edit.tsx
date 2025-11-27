@@ -1,4 +1,4 @@
-import { ArrowLeft, Save, Trash } from 'lucide-react';
+import { ArrowLeft, Save, Send, Trash } from 'lucide-react';
 import { type ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
@@ -15,7 +15,9 @@ import {
   type EditPostResponse,
   type FetchPostListResponse,
   hasPosts,
-  listPosts
+  listPosts,
+  publishPost,
+  type PublishPostResponse
 } from '../../api/post.ts';
 import {
   type FetchTemplateListResponse,
@@ -199,11 +201,33 @@ export function Edit() {
     setIntProfileValue(event.target.value);
   }
 
+  async function onHandlePublishPost() {
+    if (!confirm(
+      "Confirma a solicitação de publicação? Isso vai inserir essa publicação "+
+      "na fila de processamento."
+    )) return;
+
+    const data = await auth.request(async (token) => {
+      return await publishPost(Number(post_id), token);
+    }) as PublishPostResponse;
+
+    if (!data.resource.ok) {
+      toast.error('Erro durante a solicitação de publicação: ' + data.resource.error);
+
+      return;
+    }
+
+    toast.success('Solicitação de publicação realizada com sucesso!');
+  }
+
   return (
     <div id="screen-post-edit">
       <header>
         <OutlineButton label="Voltar" Icon={ArrowLeft} onClick={goBack}/>
-        <PageTitle>Editar publicação</PageTitle>
+        <div className="right">
+          <PageTitle>Editar publicação</PageTitle>
+          <OutlineButton label="Publicar" Icon={Send} onClick={onHandlePublishPost}/>
+        </div>
       </header>
 
       <form className="form-edit-container" onSubmit={event => {

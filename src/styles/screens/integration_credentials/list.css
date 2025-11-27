@@ -50,17 +50,17 @@
           background-color: var(--color-gray);
           border-radius: .24rem;
 
-          &.linkedin {
+          &.telegram {
             background: linear-gradient(
               to right,
-              #0077b5,#00a0dc
+              #0088cc,#fff
             );
           }
 
-          &.X {
+          &.discord {
             background: linear-gradient(
               to right,
-              #000,#fff
+              #7289da,#fff
             );
           }
         }
