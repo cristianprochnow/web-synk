@@ -55,7 +55,7 @@ export function Login() {
         onHandlerLogin();
       }}>
         <header>
-          <img src="../src/assets/synk.svg" alt="Synk's branding" />
+          <img src="/synk.svg" alt="Synk's branding" />
         </header>
 
         <div className="fields">

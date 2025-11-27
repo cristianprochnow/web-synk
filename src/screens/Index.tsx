@@ -44,7 +44,7 @@ export function Index() {
     return (
         <div id="screen-index">
             <header className="wrapper">
-                <img src="../src/assets/synk-white.svg" alt="Synk's branding" />
+                <img src="/synk-white.svg" alt="Synk's branding" />
 
                 <aside>
                     <span className="greetings">Olá, {auth.user?.name}! 👋</span>

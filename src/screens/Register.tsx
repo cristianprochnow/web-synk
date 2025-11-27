@@ -75,7 +75,7 @@ export function Register() {
         onHandlerRegister();
       }}>
         <header>
-          <img src="../src/assets/synk.svg" alt="Synk's branding" />
+          <img src="/synk.svg" alt="Synk's branding" />
         </header>
 
         <div className="fields">
