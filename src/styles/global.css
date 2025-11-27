@@ -34,7 +34,7 @@ body, input, textarea, select, button, a {
 }
 
 .empty {
-    width: 400px;
+    width: 200px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -49,7 +49,7 @@ body, input, textarea, select, button, a {
     }
 
     .empty-avatar {
-        width: 80%;
+        width: 100%;
         height: 100%;
         object-position: center;
         object-fit: contain;
@@ -61,9 +61,9 @@ body, input, textarea, select, button, a {
     }
 
     p {
-        font-size: 1.4rem;
+        font-size: 1rem;
         font-weight: 400;
-        line-height: 2.4rem;
+        line-height: 1.6rem;
         text-align: center;
         color: var(--color-gray);
 
@@ -86,7 +86,7 @@ body, input, textarea, select, button, a {
     left: 50%;
     transform: translate(-50%, -50%);
     aspect-ratio: 1;
-    border-radius: 50%; 
+    border-radius: 50%;
     background:
         radial-gradient(var(--r1) var(--r2) at top   ,#0000 79.5%,#269af2 80%),
         radial-gradient(var(--r1) var(--r2) at bottom,#269af2 79.5%,#0000 80%),
