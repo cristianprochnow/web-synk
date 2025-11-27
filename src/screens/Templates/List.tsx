@@ -9,7 +9,6 @@ import {
   type FetchTemplateListItemsResponse,
   type TemplateItem
 } from '../../api/templates.ts';
-import emptyAvatar from '../../assets/empty.svg';
 import { ActionButton } from '../../components/ActionButton.tsx';
 import { PageTitle } from '../../components/PageTitle.tsx';
 import { useAuth } from '../../contexts/Auth.tsx';
@@ -64,7 +63,7 @@ export function List() {
       <div className={`loader ${!isLoading ? 'hidden' : ''}`}></div>
       <div className={`empty ${isLoading || !isEmpty ? 'hidden' : ''}`}>
         <div className="empty-avatar">
-          <img src={emptyAvatar} alt="Nenhum resultado encontrado!"/>
+          <img src="/empty.svg" alt="Nenhum resultado encontrado!"/>
         </div>
 
         <p>

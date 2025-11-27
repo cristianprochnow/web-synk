@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import { hasPosts, listPosts, type FetchPostListResponse, type PostItem } from '../../api/post.ts';
-import emptyAvatar from '../../assets/empty.svg';
 import { ActionButton } from '../../components/ActionButton';
 import { PageTitle } from '../../components/PageTitle';
 import { useAuth } from '../../contexts/Auth.tsx';
@@ -57,7 +56,7 @@ export function List() {
       <div className={`loader ${!isLoading ? 'hidden' : ''}`}></div>
       <div className={`empty ${isLoading || !isEmpty ? 'hidden' : ''}`}>
         <div className="empty-avatar">
-          <img src={emptyAvatar} alt="Nenhum resultado encontrado!"/>
+          <img src="/empty.svg" alt="Nenhum resultado encontrado!"/>
         </div>
 
         <p>
