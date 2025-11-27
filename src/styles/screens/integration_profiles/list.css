@@ -55,18 +55,12 @@
           border-radius: .56rem;
 
           &.telegram {
-            background: linear-gradient(
-              to right,
-              #0088cc,#fff
-            );
+            background: #0088cc;
             color: #FFF;
           }
 
           &.discord {
-            background: linear-gradient(
-              to right,
-              #7289da,#fff
-            );
+            background: #7289da;
             color: #FFF;
           }
 
