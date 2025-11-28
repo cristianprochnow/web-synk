@@ -71,7 +71,7 @@ export function List() {
         </div>
 
         <p>
-          Ooops... Nenhum resultado encontrado. Que tal começar <Link to="/int_credentials/add">criando um novo?</Link>
+          Ooops... Nenhum resultado encontrado. Que tal começar <Link to="/integrations/add">criando um novo?</Link>
         </p>
       </div>
 
