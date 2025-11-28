@@ -89,7 +89,7 @@ export function Add() {
       post_name: nameRef.current?.value || null,
       post_content: contentRef.current?.value || null,
       template_id: templateRef.current ? Number(templateRef.current.value) : null,
-      int_profile_id: templateRef.current ? Number(templateRef.current.value) : null,
+      int_profile_id: intProfileRef.current ? Number(intProfileRef.current.value) : null,
     };
 
     const data = await auth.request(async (token) => {
