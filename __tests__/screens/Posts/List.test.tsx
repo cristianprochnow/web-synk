@@ -1,95 +1,91 @@
+/**
+ * @jest-environment jest-environment-jsdom
+ */
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import { List } from '../../../src/screens/Posts/List';
+import * as PostApi from '../../../src/api/post'; // Adjust path
+import { List } from '../../../src/screens/Posts/List'; // Adjust path
 
-jest.mock('../../../src/contexts/Auth.tsx', () => ({
-  useAuth: () => ({
-    request: jest.fn().mockResolvedValue({
-      resource: { ok: true },
-      posts: [
-        {
-          post_id: 1,
-          post_name: 'Post do LinkedIn top demais',
-          status: 'published',
-          template_name: 'templateC',
-          int_profile_name: 'MyProfile',
-          created_at: '2023-01-01'
-        },
-        {
-          post_id: 1,
-          post_name: 'Post do LinkedIn',
-          status: 'draft',
-          template_name: 'Insta',
-          int_profile_name: 'ProfileX',
-          created_at: '2023-01-01'
-        },
-      ]
-    }),
-    user: { id: 1, name: "Test User" },
-    loggedIn: true
-  })
-}));
-
+// --- Mocks ---
 const mockNavigate = jest.fn();
-
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
     useNavigate: () => mockNavigate,
 }));
 
-describe('screens/List', () => {
+jest.mock('../../../src/contexts/Auth', () => ({
+    useAuth: () => ({
+        request: (callback: (token: string) => Promise<any>) => callback('fake-token'),
+    }),
+}));
+
+jest.mock('react-toastify', () => ({
+    toast: { info: jest.fn(), error: jest.fn() }
+}));
+
+jest.mock('../../../src/api/post');
+
+describe('screens/posts/List', () => {
     beforeEach(() => {
-        mockNavigate.mockClear();
+        jest.clearAllMocks();
     });
 
-    it('should render the page title and action button', async () => {
-        render(
-            <MemoryRouter>
-                <List />
-            </MemoryRouter>
-        );
+    it('should render empty state when no posts are found', async () => {
+        (PostApi.listPosts as jest.Mock).mockResolvedValue({
+            resource: { ok: true },
+            posts: []
+        });
+        (PostApi.hasPosts as jest.Mock).mockReturnValue(false);
+
+        render(<MemoryRouter><List /></MemoryRouter>);
+
+        expect(screen.getByRole('heading', { name: /publicações/i })).toBeInTheDocument();
 
         await waitFor(() => {
-          const pageTitle = screen.getByRole('heading', { name: /publicações/i });
-          expect(pageTitle).toBeInTheDocument();
-
-          const newPostButton = screen.getByRole('button', { name: /nova publicação/i });
-          expect(newPostButton).toBeInTheDocument();
+            expect(PostApi.listPosts).toHaveBeenCalled();
+            expect(screen.getByText(/nenhum resultado encontrado/i)).toBeInTheDocument();
         });
     });
 
-    it('should render the list of posts from initial state', async () => {
-        render(
-            <MemoryRouter>
-                <List />
-            </MemoryRouter>
-        );
+    it('should render a list of posts', async () => {
+        const mockPosts = [
+            {
+                post_id: 1,
+                post_name: 'My First Post',
+                status: 'draft',
+                template_name: 'Instagram Template',
+                int_profile_name: 'My Profile',
+                created_at: '2023-10-10'
+            }
+        ];
+
+        (PostApi.listPosts as jest.Mock).mockResolvedValue({
+            resource: { ok: true },
+            posts: mockPosts
+        });
+        (PostApi.hasPosts as jest.Mock).mockReturnValue(true);
+
+        render(<MemoryRouter><List /></MemoryRouter>);
 
         await waitFor(() => {
-          expect(screen.getByText('Post do LinkedIn top demais')).toBeInTheDocument();
-          expect(screen.getByText('published')).toBeInTheDocument();
-          expect(screen.getByText('templateC')).toBeInTheDocument();
-
-          expect(screen.getByText('Post do LinkedIn')).toBeInTheDocument();
-          expect(screen.getByText('draft')).toBeInTheDocument();
-          expect(screen.getByText('ProfileX')).toBeInTheDocument();
+            expect(screen.getByText('My First Post')).toBeInTheDocument();
+            expect(screen.getByText('draft')).toBeInTheDocument();
+            expect(screen.getByText('Instagram Template')).toBeInTheDocument();
         });
     });
 
-    it('should call navigate to "/posts/add" when the action button is clicked', async () => {
-        render(
-            <MemoryRouter>
-                <List />
-            </MemoryRouter>
-        );
+    it('should navigate to add screen', async () => {
+        (PostApi.listPosts as jest.Mock).mockResolvedValue({ resource: { ok: true }, posts: [] });
+        (PostApi.hasPosts as jest.Mock).mockReturnValue(false);
 
-        const newPostButton = screen.getByRole('button', { name: /nova publicação/i });
-        fireEvent.click(newPostButton);
+        render(<MemoryRouter><List /></MemoryRouter>);
 
-        await waitFor(() => {
-          expect(mockNavigate).toHaveBeenCalledTimes(1);
-          expect(mockNavigate).toHaveBeenCalledWith('/posts/add');
-        });
+        await waitFor(() => expect(PostApi.listPosts).toHaveBeenCalled());
+
+        const addBtn = screen.getByRole('button', { name: /nova publicação/i });
+        fireEvent.click(addBtn);
+
+        expect(mockNavigate).toHaveBeenCalledWith('/posts/add');
     });
 });

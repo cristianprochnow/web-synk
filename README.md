@@ -18,7 +18,7 @@ yarn dev
 
 ## Tests
 
-To do tests, just run `yarn test` in local environment that everything gonna be ok!
+To do tests, just run `yarn test` (or `yarn test:coverage` for test coverage) in local environment that everything gonna be ok!
 
 ## Certificates
 

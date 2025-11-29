@@ -9,8 +9,9 @@ import { toast } from 'react-toastify';
 import * as ColorsApi from '../../../src/api/colors';
 import * as IntCredentialsApi from '../../../src/api/intCredentials';
 import * as IntProfilesApi from '../../../src/api/intProfiles';
-import { Add } from '../../../src/screens/IntegrationProfiles/Add';
+import { Add } from '../../../src/screens/IntegrationProfiles/Add'; // Adjust path
 
+// --- Mocks ---
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => ({
     ...jest.requireActual('react-router'),
@@ -27,6 +28,7 @@ jest.mock('react-toastify', () => ({
     toast: { success: jest.fn(), error: jest.fn() }
 }));
 
+// Mock all 3 APIs used
 jest.mock('../../../src/api/intProfiles');
 jest.mock('../../../src/api/intCredentials');
 jest.mock('../../../src/api/colors');
@@ -46,6 +48,7 @@ describe('screens/integration_profiles/Add', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        // Setup default returns
         (ColorsApi.listColors as jest.Mock).mockReturnValue(mockColors);
         (IntCredentialsApi.listCredentials as jest.Mock).mockResolvedValue({
             resource: { ok: true },
@@ -59,21 +62,27 @@ describe('screens/integration_profiles/Add', () => {
 
         render(<MemoryRouter><Add /></MemoryRouter>);
 
-        // Wait for dropdowns to be populated
-        await screen.findByText('Telegram Bot');
+        // Wait for dropdowns to populate
+        await waitFor(() => expect(screen.getByText('Red')).toBeInTheDocument());
 
+        // 1. Fill Name
         await user.type(screen.getByLabelText(/apelido/i), 'New Config');
+
+        // 2. Select Color (Red - ID 1)
         await user.selectOptions(screen.getByLabelText(/cor/i), '1');
 
-        // Select multiple credentials
+        // 3. Select Credentials (Multiple)
+        // We select both available credentials
         await user.selectOptions(screen.getByLabelText(/integrações/i), ['101', '102']);
 
+        // 4. Save
         await user.click(screen.getByRole('button', { name: /salvar/i }));
 
         await waitFor(() => {
             expect(IntProfilesApi.addIntProfile).toHaveBeenCalledWith({
                 int_profile_name: 'New Config',
                 color_id: 1,
+                // The component converts strings to numbers, so we expect numbers [101, 102]
                 credentials: [101, 102]
             }, 'fake-token');
         });
@@ -88,9 +97,7 @@ describe('screens/integration_profiles/Add', () => {
         });
 
         render(<MemoryRouter><Add /></MemoryRouter>);
-
-        // Wait for load
-        await screen.findByText('Telegram Bot');
+        await waitFor(() => expect(screen.getByText('Red')).toBeInTheDocument());
 
         await user.click(screen.getByRole('button', { name: /salvar/i }));
 
